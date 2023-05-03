@@ -12,6 +12,7 @@ Amigo secreto sem necessidade de cadastro.
 1. Baixe o repositório
 2. Abra o terminal e navegue até o repositório baixado
 3. Rode o seguinte comando `docker compose up`
+4. Agora basta fazer os comandos para `localhost:3000`
 
 ## Participantes
 
@@ -20,5 +21,5 @@ Amigo secreto sem necessidade de cadastro.
  | Ashlley Maria de Lima Assis    | 125111357458 |                                       |
  | Gustavo Henrique Aciem         | 125111361436 | https://github.com/aciem22            |
  | Lucas Mello dos Santos         | 125111358721 | https://github.com/lmello0            |
- | Riley Matheus de Jesus Ramalho | 125111360582 |                                       |
+ | Riley Matheus de Jesus Ramalho | 125111360582 | https://github.com/rileyramalho       |
  | Victor Hugo Lima Cavalcante    | 125111369125 | https://github.com/victorhlcavalcante |
