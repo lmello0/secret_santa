@@ -1,0 +1,7 @@
+<content>
+    <h1>{{ this.raffle.code }}</h1>
+
+    <app-menu [raffle]="raffle" [canSave]="this.canSave"></app-menu>
+    
+    <app-participants-list [participants]="raffle.participants" (canSave)="onCanSave()"></app-participants-list>
+</content>

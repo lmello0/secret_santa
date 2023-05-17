@@ -1,0 +1,28 @@
+<body>
+  <div class="container">
+    <img class="logo" src="../../assets/logo.svg" alt="" />
+
+    <div class="content">
+      <h2>ENTRE EM UM AMIGO SECRETO JÁ EXISTENTE</h2>
+
+      <form [formGroup]="redirectForm">
+        <div class="code-div">
+          <input
+            class="access-code"
+            type="text"
+            placeholder="COPIE O CÓDIGO DE ACESSO AQUI..."
+            maxlength="11"
+            formControlName="raffleId"
+          />
+          <button (click)="redirect()" class="enter-btn"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </form>
+
+      <p>OU</p>
+
+      <a routerLink="/raffle/new">
+        <button class="new-raffle-btn">CLIQUE AQUI PARA INICIAR UM NOVO AMIGO SECRETO</button>
+      </a>
+    </div>
+  </div>
+</body>

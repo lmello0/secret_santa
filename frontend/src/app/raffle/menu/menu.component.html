@@ -1,0 +1,92 @@
+<content>
+  <div class="container">
+    <div class="wrapper">
+      <form [formGroup]="addForm">
+        <ul class="panel add-panel">
+          <li>
+            <input type="text" placeholder="Nome" formControlName="name" />
+          </li>
+          <li>
+            <input type="text" placeholder="Email" formControlName="email" />
+          </li>
+          <li>
+            <button
+              class="add-btn btn"
+              [disabled]="!addForm.valid"
+              (click)="sendData()"
+              [ngClass]="allowButtonAddPanel()"
+            >
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </li>
+        </ul>
+      </form>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="wrapper">
+      <form [formGroup]="adminForm">
+        <ul class="panel admin-panel">
+          <li>
+            <input
+              class="admin-code"
+              type="text"
+              placeholder="Código de admin"
+              formControlName="adminCode"
+            />
+
+            <button class="copy-btn btn" title="Copiar link amigo secreto">
+              <i class="fa-solid fa-copy"></i>
+            </button>
+            <button
+              class="start-btn btn"
+              title="Iniciar amigo secreto"
+              [disabled]="!adminForm.valid"
+              [ngClass]="allowButtonControlPanel()"
+            >
+              Iniciar
+            </button>
+          </li>
+        </ul>
+      </form>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="wrapper">
+      <ul class="panel">
+        <li>
+          <button
+            class="add-btn"
+            (click)="saveData()"
+            [disabled]="!this.canSave ? true : null"
+            [ngClass]="allowSaveButton()"
+          >
+            <i class="fa-solid fa-save"></i>
+          </button>
+          <button
+            class="del-btn btn"
+            (click)="confirmDelete.toggle()"
+            title="Deletar amigo secreto"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</content>
+
+<app-modal #confirmDelete id="modal">
+  <h1>#Confirmar deleção</h1>
+  <p>
+    Tem certeza que deseja deletar o amigo secreto <strong>{{ raffle.code }}</strong>?
+    Essa ação é irreversível.
+  </p>
+
+  <ul class="panel">
+    <li><button class="btn add-btn" (click)="deleteRaffle()"><i class="fa-solid fa-check"></i> Deletar</button></li>
+    <li><button class="btn del-btn" (click)="confirmDelete.toggle()"><i class="fa-solid fa-xmark"></i></button></li>
+  </ul>
+</app-modal>

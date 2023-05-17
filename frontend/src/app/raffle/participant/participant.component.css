@@ -1,0 +1,173 @@
+.card-container {
+  background-color: white;
+  box-shadow: 0px 0px 20px 0px #000;
+  border-radius: 20px;
+  height: 125px;
+  width: 275px;
+  margin: 20px;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.card-content {
+  display: block;
+}
+
+.card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: backdrop-filter 300ms;
+}
+
+.card-overlay:hover {
+  opacity: 1;
+  backdrop-filter: blur(2px);
+}
+
+.card-content {
+  height: 100%;
+  width: 100%;
+  overflow-wrap: break-word;
+  transition: filter 200ms ease-in-out;
+}
+
+.card-in-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+
+  padding: 0 15px;
+  line-height: 1.1rem;
+}
+
+.card-text {
+  padding: 2px 0px;
+}
+
+.card-text > strong {
+  font-weight: bolder;
+}
+
+.card-index {
+  margin-bottom: 10px;
+}
+
+.card-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-weight: bold;
+  height: 35px;
+  width: 35px;
+  cursor: pointer;
+  transition: background-color 250ms;
+  margin: 0 5px;
+}
+
+.card-del-button {
+  background-color: var(--red);
+}
+
+.card-del-button:hover {
+  cursor: pointer;
+  background-color: var(--hover-red);
+}
+
+.card-edit-button {
+  background-color: var(--green);
+  width: fit-content;
+}
+
+.card-edit-button:hover {
+  background-color: var(--hover-green);
+}
+
+/* modal */
+.modal {
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0px 0px 20px 0px #000;
+  min-width: 275px;
+  position: fixed;
+  left: 50%;
+  padding: 24px;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  height: 100vh;
+  left: 0;
+  backdrop-filter: blur(5px);
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 10;
+}
+
+.cool-input {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: static;
+  max-width: 240px;
+}
+
+.cool-input label {
+  font-size: 0.75rem;
+  color: gray;
+  font-weight: 700;
+  position: relative;
+  top: 0.5rem;
+  margin: 0 0 0 7px;
+  padding: 0 3px;
+  background: var(--white);
+  width: fit-content;
+  border-radius: 10px;
+}
+
+.cool-input input[type="text"].card-input {
+  padding: 11px 10px;
+  font-size: 0.75rem;
+  border: 2px gray solid;
+  border-radius: 5px;
+  background: var(--white);
+  width: 100%;
+  transition: 150ms ease-in-out;
+}
+
+.cool-input input[type="text"].card-input:focus {
+  border: 2px var(--main-blue) solid;
+}
+
+.button-holder {
+  display: flex;
+  padding: 10px 0;
+}
+
+.modal .card-button {
+  width: fit-content;
+  padding: 0 10px;
+  margin: 0;
+  margin-right: 5px;
+}
+
+.card-button-disabled {
+  border: 1px solid gray;
+  background-color: gray;
+}

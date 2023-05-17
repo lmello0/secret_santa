@@ -1,0 +1,47 @@
+<div class="card-container">
+  <div class="card-overlay">
+    <button class="card-button card-del-button" (click)="onDelete()">X</button>
+    <button class="card-button card-edit-button" (click)="onEdit()">
+      <i class="fa-solid fa-pen-to-square"></i>Editar
+    </button>
+  </div>
+
+  <div class="card-content">
+    <div class="card-in-panel">
+      <p class="card-text">
+        <strong>#{{ participant.id }}</strong>
+      </p>
+      <p class="card-text"><strong>Nome: </strong>{{ participant.name }}</p>
+      <p class="card-text"><strong>Email: </strong>{{ participant.email }}</p>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="edit">
+  <div class="modal">
+      <form [formGroup]="editForm">
+        <p class="card-text">#Editar participante</p>
+
+        <div class="cool-input">
+          <label>Name</label>
+          <input
+            class="card-input"
+            type="text"
+            formControlName="name"
+            name="name"
+          />
+        </div>
+
+        <div class="cool-input">
+          <label>Email</label>
+          <input class="card-input" type="text" formControlName="email" />
+        </div>
+
+        <div class="button-holder">
+          <button [ngClass]="allowEditButton()" [disabled]="!editForm.valid" (click)="confirmChanges()">Confirmar</button>
+          <button class="card-button card-del-button" (click)="onEdit()">Cancelar</button>
+        </div>
+      </form>
+  </div>
+  <div class="overlay" (click)="onEdit()"></div>
+</ng-container>

@@ -1,0 +1,114 @@
+content {
+    display: flex;
+    flex-direction: row;
+    /* width: 1050.530px; */
+}
+
+.container {
+    align-items: center;
+    background-color: var(--main-blue);
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px 0px #000;
+    color: white;
+    display: flex;
+    height: 80px;
+    margin: 0px 10px;
+}
+
+.wrapper {
+    padding: 10px;
+}
+
+.panel {
+    display: flex;
+    align-items: center;
+}
+
+.add-panel li {
+    margin: 0px 10px;
+}
+
+.admin-panel li:nth-last-child(1) {
+    margin-right: 10px;
+}
+
+input {
+    padding: 8px;
+    border: 1px solid var(--white);
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px 0 rgb(0, 0, 0, 0.2);
+    outline: none;
+    margin-left: 10px;
+    transition: border-radius 200ms;
+}
+
+input:focus {
+    border-radius: 0px;
+}
+
+.btn {
+    border: 1px solid;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px 0 rgb(0, 0, 0, 0.2);
+    color: var(--white);
+    cursor: pointer;
+    padding: 8px;
+    transition: 200ms ease-in-out;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+.add-btn {
+    border-color: var(--green);
+    padding: 8px 15px;
+    background-color: var(--green);
+}
+
+.start-btn {
+    border-color: var(--green);
+    background-color: var(--green);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.admin-code {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.del-btn {
+    border-color: var(--red);
+    margin-left: 10px;
+    background-color: var(--red);
+}
+
+.copy-btn {
+    border-radius: 0;
+    color: var(--green);
+}
+
+.btn-disabled {
+    border: 1px solid gray;
+    background-color: gray;
+}
+
+.save-btn {
+    border-color: var(--green);
+    background-color: var(--green);
+}
+
+.wrapper:last-of-type {
+    padding: 10px 20px;
+}
+
+#modal h1 {
+    font-size: 1.7rem;
+    margin: 20px 0;
+}
+
+#modal p {
+    margin: 20px 0;
+    margin-bottom: 30px;
+}

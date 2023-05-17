@@ -6,12 +6,15 @@ dotenv.config();
 
 import Raffle, { IRaffle } from "./database";
 import { draft, sendMail } from "./utils";
+import { hashString } from "./utils";
 
 const port = process.env.PORT;
 
 const app = express();
 const route = Router();
 
+
+// middlewares
 app.use(route);
 route.use(json());
 
@@ -23,61 +26,127 @@ route.use((req: Request, res: Response, next) => {
   next();
 });
 
-route.get("/getRaffle/:code", async (req: Request, res: Response) => {
+route.use((req: Request, res: Response, next) => {
+  res.set({
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "*",
+    "Access-Control-Allow-Headers": "*",
+  });
+
+  next();
+});
+
+// route.use((req: Request, res: Response, next) => {
+//   if (req.body.adminCode) {
+//     req.body.adminCode = hashString(req.body.adminCode);
+//   }
+
+//   next();
+// });
+
+
+// rotas
+route.get("/getRaffle/:code", (req: Request, res: Response) => {
   const { code } = req.params;
 
-  const raffle = await Raffle.findOne({ code }).exec();
+  const raffle = Raffle.findOne({ code }).exec();
 
-  if (raffle) {
-    res.json({ raffle });
-    return;
-  }
+  raffle
+    .then((result) => {
+      if (result) {
+        res.send(result);
+        return;
+      }
 
-  res.status(404).json({ error: "No raffle found with the given code" });
+      res.statusCode = 204;
+      res.send("No raffle with the given code");
+    })
+    .catch((err) => {
+      res.statusCode = 500;
+      res.send(err);
+    });
 });
 
 route.post("/createRaffle", async (req: Request, res: Response) => {
   const { code, adminCode, participants } = req.body;
 
-  const raffleExists: boolean = (await Raffle.findOne({ code })) ? true : false;
+  const raffleExists: Boolean = (await Raffle.findOne({ code })) ? true : false;
 
   if (raffleExists) {
-    res.status(409).json({ message: `Raffle ${code} already exists!` });
+    res.status(204).json({ message: `Raffle ${code} already exists!` });
     return;
   }
 
-  const newRaffle: IRaffle = await Raffle.create({
+  Raffle.create({
     code,
     adminCode,
     participants,
     started: false,
     version: 0,
-  });
-
-  res.json({ message: `Raffle ${code} created!`, raffle: newRaffle });
+  })
+    .then(() => {
+      res.statusCode = 201;
+      res.json({ message: `Raffle ${code} created!` });
+    })
+    .catch((err) => {
+      res.statusCode = 204;
+      res.json({ message: err });
+    });
 });
 
 route.put("/updateRaffle", async (req: Request, res: Response) => {
-  const { code, adminCode, participants, started, version } = req.body;
+  const { code, adminCode, participants } = req.body;
 
-  const updatedRaffle = await Raffle.updateOne(
-    { code },
-    {
-      code,
-      adminCode,
-      participants,
-      started,
-      version: version + 1,
-    }
-  );
+  let raffle = await Raffle.findOne({ code }).exec();
 
-  res.json({ message: `Raffle ${code} updated!`, raffle: updatedRaffle });
+  if (raffle) {
+    raffle.participants = participants;
+    raffle.version = raffle.version + 1;
+
+    raffle.save()
+      .then(() => {
+        res.statusCode = 201;
+        res.json({ message: `Raffle ${code} updated!` });
+      });
+  } else {
+    raffle = new Raffle({
+      adminCode: adminCode,
+      code: code,
+      participants: participants,
+      started: false,
+      version: 0
+    });
+
+    raffle.save()
+      .then(() => {
+        res.statusCode = 201;
+        res.json({ message: `Raffle ${code} created!` });
+      });
+  }
+
+});
+
+route.delete("/deleteRaffle/:code", async (req: Request, res: Response) => {
+  const { code } = req.params;
+
+  const raffle = await Raffle.findOne({ code }).exec();
+
+  if (!raffle) {
+    res
+      .status(204)
+      .json({ error: `Cannot delete inexistent raffle - ${code}` });
+    return;
+  }
+
+  Raffle.deleteOne({ code }).then(() => {
+    res.json({ message: `Raffle ${code} deleted` });
+  });
 });
 
 route.post("/startRaffle", async (req: Request, res: Response) => {
-  const { code, adminCode, participants, version, started } = req.body;
+  const { code, adminCode, participants, version } = req.body;
 
-  const raffle = await Raffle.findOneAndUpdate(
+  await Raffle.findOneAndUpdate(
     { code },
     {
       code,
@@ -86,18 +155,16 @@ route.post("/startRaffle", async (req: Request, res: Response) => {
       version: Number(version) + 1,
       started: true,
     },
-    { new: true,
-      returnDocument: "after"
-    }
+    { new: true }
   );
 
   const draftedParticipants = draft(participants);
 
-  for(let i = 0; draftedParticipants.length; i++) {
+  for (let i = 0; draftedParticipants.length; i++) {
     sendMail(draftedParticipants[i], code);
   }
 
-  res.json({ message: 'Raffle started!' })
+  res.json({ message: "Raffle started!" });
 });
 
 app.listen(port, () => {

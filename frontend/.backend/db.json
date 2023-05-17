@@ -1,0 +1,34 @@
+{
+  "TESTE": {
+    "_id": {
+      "$oid": "645bfff296c0e7d9b953e002"
+    },
+    "code": "TESTE",
+    "adminCode": "TESTE",
+    "participants": [
+      {
+        "name": "lucas",
+        "email": "lucas@gmail.com",
+        "_id": {
+          "$oid": "645bfff296c0e7d9b953e003"
+        }
+      },
+      {
+        "name": "joao",
+        "email": "joao@gmail.com",
+        "_id": {
+          "$oid": "645bfff296c0e7d9b953e004"
+        }
+      },
+      {
+        "name": "pedro",
+        "email": "pedro@gmail.com",
+        "_id": {
+          "$oid": "645bfff296c0e7d9b953e005"
+        }
+      }
+    ],
+    "started": false,
+    "version": 0
+  }
+}

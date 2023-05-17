@@ -1,0 +1,77 @@
+.container {
+  position: relative;
+  margin-top: 0;
+  text-align: center;
+}
+
+.content {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  top: 50%;
+}
+
+.content > p {
+  line-height: 1.2rem;
+  font-weight: bold;
+  color: #000;
+  font-size: 1.2rem;
+}
+
+/* .code-div {} */
+
+.logo {
+  position: absolute;
+  width: 150px;
+  max-width: 50%;
+  max-height: 50%;
+  width: auto;
+  height: auto;
+}
+
+
+.access-code {
+  position: relative;
+  margin-top: 5px;
+  line-height: 1.2rem;
+  font-size: 1rem;
+  border: 1px solid black;
+  border-radius: 18px;
+  height: 4rem;
+  text-align: center;
+}
+
+.access-code input[type="text"] {
+  padding: 10px;
+  font-size: 1rem;
+  color: #777;
+  width: 100%;
+  text-align: center;
+}
+
+.access-code input[type="text"]:focus::placeholder {
+  color: transparent;
+}
+
+.access-code input[type="text"]:focus {
+  outline: none;
+}
+
+.new-raffle-btn {
+  position: relative;
+  top: 1rem;
+  background: #000;
+  border-radius: 18px;
+  padding: 10px;
+  height: 4rem;
+  color: #fff;
+  line-height: 1.2rem;
+  font-size: 1rem;
+  border: none;
+  text-align: center;
+  width: 500px;
+  cursor: pointer;
+}

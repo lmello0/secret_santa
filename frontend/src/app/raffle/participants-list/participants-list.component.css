@@ -1,0 +1,31 @@
+.container {
+  align-items: center;
+  background-color: var(--main-blue);
+  box-shadow: 0px 0px 20px 0px #000;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  min-height: 125px;
+  width: 1050.53px;
+
+  padding: 20px;
+}
+
+.wrapper {
+  width: inherit;
+  max-height: calc(125px * 3.2);
+
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.participants-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.participant-wrapper {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
