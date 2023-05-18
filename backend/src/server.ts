@@ -36,24 +36,17 @@ route.use((req: Request, res: Response, next) => {
   next();
 });
 
-// route.use((req: Request, res: Response, next) => {
-//   if (req.body.adminCode) {
-//     req.body.adminCode = hashString(req.body.adminCode);
-//   }
-
-//   next();
-// });
-
-
 // rotas
 route.get("/getRaffle/:code", (req: Request, res: Response) => {
   const { code } = req.params;
 
-  const raffle = Raffle.findOne({ code }).exec();
+  const raffle = Raffle.findOne({ code }, { _id: 0, 'participants._id': 0 }).exec();
 
   raffle
     .then((result) => {
       if (result) {
+        console.log(result);
+
         res.send(result);
         return;
       }
@@ -97,13 +90,13 @@ route.post("/createRaffle", async (req: Request, res: Response) => {
 route.put("/updateRaffle", async (req: Request, res: Response) => {
   const { code, adminCode, participants } = req.body;
 
-  let raffle = await Raffle.findOne({ code }).exec();
+  let raffle = await Raffle.findOne({ code });
 
   if (raffle) {
     raffle.participants = participants;
     raffle.version = raffle.version + 1;
 
-    raffle.save()
+    Raffle.updateOne({ code }, raffle)
       .then(() => {
         res.statusCode = 201;
         res.json({ message: `Raffle ${code} updated!` });
@@ -123,7 +116,6 @@ route.put("/updateRaffle", async (req: Request, res: Response) => {
         res.json({ message: `Raffle ${code} created!` });
       });
   }
-
 });
 
 route.delete("/deleteRaffle/:code", async (req: Request, res: Response) => {

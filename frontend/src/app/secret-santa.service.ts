@@ -11,21 +11,27 @@ export class SecretSantaService {
 
   constructor(private http: HttpClient) { }
 
-  getRaffle(raffleCode: string): Observable<IRaffle> {
-    const url: string = `${this.API}/getRaffle/${raffleCode}`;
+  getRaffle(raffleCode: String): Observable<IRaffle> {
+    const url = `${this.API}/getRaffle/${raffleCode}`;
 
     return this.http.get<IRaffle>(url);
   }
 
   saveRaffle(raffle: IRaffle): Observable<IRaffle> {
-    const url: string = `${this.API}/updateRaffle`;
+    const url = `${this.API}/updateRaffle`;
 
     return this.http.put<IRaffle>(url, raffle);
   }
 
-  deleteRaffle(code: string): Observable<IRaffle> {
-    const url : string = `${this.API}/deleteRaffle/${code}`;
+  deleteRaffle(code: String): Observable<IRaffle> {
+    const url = `${this.API}/deleteRaffle/${code}`;
 
     return this.http.delete<IRaffle>(url);
+  }
+
+  startRaffle(code: String): Observable<IRaffle> {
+    const url = `${this.API}/startRaffle`;
+
+    return this.http.post<IRaffle>(url, code);
   }
 }

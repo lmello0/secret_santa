@@ -12,11 +12,9 @@ export class ParticipantsListComponent {
   @Output() canSave = new EventEmitter<Boolean>();
 
   onDeleteParticipant(event: number) {
+    this.participants.splice(event-1, 1);
+
     for(let i = 0; i < this.participants.length; i++) {
-      if (this.participants[i].id == event) {
-        this.participants.splice(i, 1);
-      }
-      
       this.participants[i].id = i + 1;
     }
   }

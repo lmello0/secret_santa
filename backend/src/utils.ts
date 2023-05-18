@@ -78,7 +78,7 @@ export function sendMail(draft: IDraft, code: string): void {
     transporter.sendMail(mailData);
 }
 
-export async function hashString(stringToHash: string) {
+export function hashString(stringToHash: string) {
     const salt = genSaltSync(10);
     const hash = hashSync(stringToHash, salt);
 

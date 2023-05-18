@@ -1,9 +1,9 @@
 import { IParticipant } from "./participant";
 
 export interface IRaffle {
-    code: String,
-    adminCode: String,
+    code: string,
+    adminCode: string,
     participants: IParticipant[],
-    started: Boolean,
-    version: Number
+    started: boolean,
+    version: number
 }

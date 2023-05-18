@@ -1,5 +1,5 @@
 export interface IParticipant {
-    id?: Number,
-    name: String,
-    email: String
+    id?: number,
+    name: string,
+    email: string
 }

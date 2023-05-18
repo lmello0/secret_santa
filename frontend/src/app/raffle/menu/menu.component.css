@@ -103,12 +103,26 @@ input:focus {
     padding: 10px 20px;
 }
 
-#modal h1 {
+.copy-message {
+    position: absolute;
+    margin-left: 10px;
+    margin-top: 2px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    word-spacing: 3px;
+}
+
+.modal h1 {
     font-size: 1.7rem;
     margin: 20px 0;
 }
 
-#modal p {
+.modal p {
     margin: 20px 0;
     margin-bottom: 30px;
+    line-height: 2rem;
+}
+
+.modal strong {
+    font-weight: bolder;
 }

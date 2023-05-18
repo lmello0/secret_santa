@@ -14,10 +14,8 @@ export class MenuComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private service: SecretSantaService,
-  ) {
-    console.log(String(this.router.getCurrentNavigation()?.extras.state).toString());
-  }
+    private service: SecretSantaService
+  ) {}
 
   addForm!: FormGroup;
   adminForm!: FormGroup;
@@ -25,8 +23,16 @@ export class MenuComponent implements OnInit {
 
   @Input() raffle: IRaffle = {} as IRaffle;
   @Input() canSave: Boolean = false;
+  copyBtnClicked: Boolean = false;
 
   currentUrl: String = this.router.url;
+
+  isCopyMessageHidden: Boolean = true;
+  savedBtnClass = {
+    class: 'fa-solid fa-save',
+    status: false,
+    text: ''
+  };
 
   ngOnInit(): void {
     this.addForm = this.formBuilder.group({
@@ -65,22 +71,42 @@ export class MenuComponent implements OnInit {
   }
 
   allowButtonControlPanel(): string {
-    return this.adminForm.valid ? 'btn' : 'btn btn-disabled';
+    return this.adminForm.valid && this.raffle.participants.length >= 4 ? 'btn' : 'btn btn-disabled';
   }
 
   allowSaveButton(): string {
     return this.canSave ? 'btn' : 'btn btn-disabled';
   }
 
+  copyAdminCode() {
+    const adminCode = this.adminForm.get('adminCode')?.value;
+    navigator.clipboard.writeText(adminCode);
+
+    this.isCopyMessageHidden = !this.isCopyMessageHidden;
+    setTimeout(() => {
+      this.isCopyMessageHidden = !this.isCopyMessageHidden;
+    }, 5000);
+
+    this.copyBtnClicked = true;
+  }
+
+  changeSaveBtn(): void {
+    this.savedBtnClass.class = 'fa-solid fa-check';
+    this.savedBtnClass.text = 'Salvo!'
+
+    setTimeout(() => {
+      this.savedBtnClass.class = 'fa-solid fa-save';
+      this.savedBtnClass.text = '';
+    }, 5000);
+  }
+
   saveData(): void {
+    this.savedBtnClass.status = true;
+    this.changeSaveBtn();
+
     this.service.saveRaffle(this.raffle).subscribe(() => {
       if (this.currentUrl == '/raffle/new') {
-        this.router.navigate([`/raffle/existent/${this.raffle.code}`], {
-          queryParams: { fromNew: true },
-          state: { adminCode: this.raffle.adminCode }
-        });
-      } else {
-        this.router.navigate([this.currentUrl]);
+        this.router.navigate([`/raffle/existent/${this.raffle.code}`]);
       }
     });
 
@@ -88,8 +114,16 @@ export class MenuComponent implements OnInit {
   }
 
   deleteRaffle() {
-    this.service.deleteRaffle(this.raffle.code).subscribe(() => {
+    if (this.currentUrl == '/raffle/new') {
       this.router.navigate(['/home']);
-    });
+    } else {
+      this.service.deleteRaffle(this.raffle.code).subscribe(() => {
+        this.router.navigate(['/home']);
+      });
+    }
+  }
+
+  startSecretSanta() {
+    console.log(this.raffle);
   }
 }

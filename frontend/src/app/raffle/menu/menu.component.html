@@ -36,19 +36,25 @@
               formControlName="adminCode"
             />
 
-            <button class="copy-btn btn" title="Copiar link amigo secreto">
+            <button
+              class="copy-btn btn"
+              title="Copiar link amigo secreto"
+              (click)="copyAdminCode()"
+            >
               <i class="fa-solid fa-copy"></i>
             </button>
             <button
               class="start-btn btn"
               title="Iniciar amigo secreto"
-              [disabled]="!adminForm.valid"
+              [disabled]="this.adminForm.valid && this.raffle.participants.length >= 4 ? null : true"
               [ngClass]="allowButtonControlPanel()"
+              (click)="startSecretSanta()"
             >
               Iniciar
             </button>
           </li>
         </ul>
+        <div class="copy-message" id="copy-message" [hidden]="isCopyMessageHidden">Código copiado!</div>
       </form>
     </div>
   </div>
@@ -59,11 +65,12 @@
         <li>
           <button
             class="add-btn"
-            (click)="saveData()"
+            (click)="this.currentUrl == '/raffle/new' ? !this.copyBtnClicked ? confirmCopyAdminCode.toggle() : saveData() : saveData()"
             [disabled]="!this.canSave ? true : null"
             [ngClass]="allowSaveButton()"
           >
-            <i class="fa-solid fa-save"></i>
+            <i [ngClass]="savedBtnClass.class"></i>
+            {{ this.savedBtnClass.text }}
           </button>
           <button
             class="del-btn btn"
@@ -78,15 +85,41 @@
   </div>
 </content>
 
-<app-modal #confirmDelete id="modal">
+<app-modal #confirmDelete class="modal">
   <h1>#Confirmar deleção</h1>
   <p>
-    Tem certeza que deseja deletar o amigo secreto <strong>{{ raffle.code }}</strong>?
-    Essa ação é irreversível.
+    Tem certeza que deseja deletar o amigo secreto
+    <strong>{{ raffle.code }}</strong
+    >? Essa ação é irreversível.
   </p>
 
   <ul class="panel">
-    <li><button class="btn add-btn" (click)="deleteRaffle()"><i class="fa-solid fa-check"></i> Deletar</button></li>
-    <li><button class="btn del-btn" (click)="confirmDelete.toggle()"><i class="fa-solid fa-xmark"></i></button></li>
+    <li>
+      <button class="btn add-btn" (click)="deleteRaffle()">
+        <i class="fa-solid fa-check"></i> Deletar
+      </button>
+    </li>
+    <li>
+      <button class="btn del-btn" (click)="confirmDelete.toggle()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </li>
   </ul>
+</app-modal>
+
+<app-modal #confirmCopyAdminCode class="modal">
+  <h1>#Copiar código de admin!</h1>
+  <p>
+    Salve o código de admin! Ele só aparecerá uma vez. Será necessário para iniciar o amigo secreto. <br>
+    <strong>Código: </strong> {{ this.raffle.adminCode }}
+  </p>
+
+  <ul class="panel">
+    <li>
+      <button class="btn add-btn" (click)="copyAdminCode(); confirmCopyAdminCode.toggle(); saveData()">
+        <i class="fa-solid fa-copy"></i>
+      </button>
+    </li>
+  </ul>
+  <div class="copy-message" id="copy-message" [hidden]="isCopyMessageHidden">Código copiado!</div>
 </app-modal>
