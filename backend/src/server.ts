@@ -69,7 +69,6 @@ route.post("/createRaffle/:code", async (req: Request, res: Response) => {
     adminCode,
     participants,
     started: false,
-    version: 0,
   })
     .then(() => {
       res.statusCode = 201;
@@ -164,17 +163,17 @@ route.delete("/deleteRaffle/:code", async (req: Request, res: Response) => {
   if (!raffle) {
     res
       .status(204)
-      .json({ error: `Cannot delete inexistent raffle - ${code}` });
+      .send(`Cannot delete inexistent raffle - ${code}`);
     return;
   }
 
   Raffle.deleteOne({ code }).then(() => {
-    res.json({ message: `Raffle ${code} deleted` });
+    res.send(`Raffle ${code} deleted`);
   });
 });
 
 route.post("/startRaffle", async (req: Request, res: Response) => {
-  const { code, adminCode, participants, version } = req.body;
+  const { code, adminCode, participants } = req.body;
 
   await Raffle.findOneAndUpdate(
     { code },
@@ -182,7 +181,6 @@ route.post("/startRaffle", async (req: Request, res: Response) => {
       code,
       adminCode,
       participants,
-      version: Number(version) + 1,
       started: true,
     },
     { new: true }
@@ -194,7 +192,7 @@ route.post("/startRaffle", async (req: Request, res: Response) => {
     sendMail(draftedParticipants[i], code);
   }
 
-  res.json({ message: "Raffle started!" });
+  res.send("Raffle started!");
 });
 
 app.listen(port, () => {
