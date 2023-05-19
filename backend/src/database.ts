@@ -18,15 +18,14 @@ const MONGO_URI: string = process.env.DB_CONNSTRING!;
 const participantsSchema = new Schema<IParticipants>({
     name: { type: String, required: true },
     email: { type: String, required: true }
-});
+}, { _id: false });
 
 const raffleSchema = new Schema<IRaffle>({
     code: { type: String, required: true, unique: true },
     adminCode: { type: String, required: true },
     participants: { type: [participantsSchema], default: [] },
-    started: { type: Boolean, default: false },
-    version: { type: Number, default: 0 }
-}, { versionKey: 'version' });
+    started: { type: Boolean, default: false }
+});
 
 const Raffle = model<IRaffle>('Raffle', raffleSchema);
 
