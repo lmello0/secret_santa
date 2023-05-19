@@ -38,19 +38,14 @@ route.use((req: Request, res: Response, next) => {
 route.get("/getRaffle/:code", (req: Request, res: Response) => {
   const { code } = req.params;
 
-  const raffle = Raffle.findOne({ code }, { _id: 0, 'participants._id': 0 }).exec();
-
-  raffle
+  Raffle.findOne({ code }, { _id: 0 }).exec()
     .then((result) => {
       if (result) {
-        console.log(result);
-
         res.send(result);
-        return;
+      } else {
+        res.statusCode = 204;
+        res.send("No raffle with the given code");
       }
-
-      res.statusCode = 204;
-      res.send("No raffle with the given code");
     })
     .catch((err) => {
       res.statusCode = 500;
