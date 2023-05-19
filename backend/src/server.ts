@@ -4,15 +4,13 @@ import dotenv from "dotenv";
 import { DateTime } from "luxon";
 dotenv.config();
 
-import Raffle, { IRaffle } from "./database";
+import Raffle from "./database";
 import { draft, sendMail } from "./utils";
-import { hashString } from "./utils";
 
 const port = process.env.PORT;
 
 const app = express();
 const route = Router();
-
 
 // middlewares
 app.use(route);
