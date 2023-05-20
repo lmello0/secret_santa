@@ -1,10 +1,10 @@
-import { IParticipants } from "./database";
+import { IParticipant } from "./database";
 import { createTransport } from "nodemailer";
 import { hashSync, genSaltSync, hash } from "bcryptjs";
 
 interface IDraft {
-    sender: IParticipants,
-    recipient: IParticipants
+    sender: IParticipant,
+    recipient: IParticipant
 }
 
 const transporter = createTransport({
@@ -20,13 +20,13 @@ const transporter = createTransport({
     }
 });
 
-export function draft(participants: IParticipants[]): IDraft[] {
-    let recipients: IParticipants[] = [];
+export function draft(participants: IParticipant[]): IDraft[] {
+    let recipients: IParticipant[] = [];
 
     let cont: number = 0;
     while(cont == 0) {
         let redo: boolean = false;
-        let possibleSanta: IParticipants[] = participants;
+        let possibleSanta: IParticipant[] = participants;
 
         const draftLength: number = possibleSanta.length;
 

@@ -15,9 +15,11 @@ const app = express();
 const route = Router();
 
 // middlewares
-app.use(route);
-route.use(json());
+app.use(cors());
 
+app.use(route);
+
+route.use(json());
 route.use((req: Request, res: Response, next) => {
   const now: string = DateTime.now().toFormat("dd/MM/yyyy HH:mm:ss");
 
@@ -26,38 +28,29 @@ route.use((req: Request, res: Response, next) => {
   next();
 });
 
-route.use((req: Request, res: Response, next) => {
-  res.set({
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "*",
-    "Access-Control-Allow-Headers": "*",
-  });
-
-  next();
-});
-
 // rotas
 route.get("/getRaffle/:code", (req: Request, res: Response) => {
   const { code } = req.params;
 
-  Raffle.findOne({ code }, { _id: 0 }).exec()
+  Raffle.findOne({ code }, { _id: 0 })
+    .exec()
     .then((result) => {
       if (result) {
-        res.send(result);
+        res.json(result);
       } else {
         res.statusCode = 204;
-        res.send("No raffle with the given code");
+        res.json("No raffle with the given code");
       }
     })
     .catch((err) => {
       res.statusCode = 500;
-      res.send(err);
+      res.json(err);
     });
 });
 
 route.post("/createRaffle/:code", async (req: Request, res: Response) => {
   const { code } = req.params;
-  const { adminCode, participants } = req.body;
+  const { adminCode, participants, budget } = req.body;
 
   const raffleExists: Boolean = (await Raffle.findOne({ code })) ? true : false;
 
@@ -69,6 +62,7 @@ route.post("/createRaffle/:code", async (req: Request, res: Response) => {
   Raffle.create({
     code,
     adminCode,
+    budget,
     participants,
     started: false,
   })
@@ -77,6 +71,8 @@ route.post("/createRaffle/:code", async (req: Request, res: Response) => {
       res.json({ message: `Raffle ${code} created!` });
     })
     .catch((err) => {
+      console.log(err);
+
       res.statusCode = 204;
       res.json({ message: err });
     });
@@ -84,7 +80,7 @@ route.post("/createRaffle/:code", async (req: Request, res: Response) => {
 
 route.put("/updateRaffle/:code", async (req: Request, res: Response) => {
   const { code } = req.params;
-  const { adminCode, participants } = req.body;
+  const { adminCode, participants, budget } = req.body;
 
   let raffle = await Raffle.findOne({ code });
 
@@ -93,19 +89,20 @@ route.put("/updateRaffle/:code", async (req: Request, res: Response) => {
 
     Raffle.updateOne({ code }, raffle).then(() => {
       res.statusCode = 201;
-      res.send(`Raffle ${code} updated!`);
+      res.json(`Raffle ${code} updated!`);
     });
   } else {
     raffle = new Raffle({
-      adminCode: adminCode,
-      code: code,
-      participants: participants,
+      code,
+      adminCode,
+      budget,
+      participants,
       started: false,
     });
 
     raffle.save().then(() => {
       res.statusCode = 201;
-      res.send(`Raffle ${code} created!`);
+      res.json(`Raffle ${code} created!`);
     });
   }
 });
@@ -123,37 +120,55 @@ route.put(
         result.save();
 
         res.statusCode = 201;
-        res.send("Participant added!");
+        res.json("Participant added!");
       } else {
         res.statusCode = 204;
-        res.send("No raffle found with the given code");
+        res.json("No raffle found with the given code");
       }
     });
   }
 );
 
 route.put(
-  "/updateRaffle/:code/participant/remove",
+  "/updateRaffle/:code/participant/edit/:id",
   (req: Request, res: Response) => {
-    const { code } = req.params;
-    const participant = req.body;
+    const { code, id } = req.params;
+    const { name, email } = req.body;
 
-    Raffle.findOneAndUpdate(
-      { code, participants: { $elemMatch: participant } },
-      { $pull: { participants: participant } },
-      { new: true }
-    ).then((result) => {
-      if (result) {
-        res.send('Participant removed!');
-      } else {
-        res.statusCode = 204;
-        res.send('Document or object not found');
-      }
-    })
-    .catch((err) => {
-      res.statusCode = 500;
-      res.send('Server error');
-    });
+    Raffle.findOne({ code })
+      .then((result) => {
+        if (result) {
+          result.participants[parseInt(id)] = { name, email };
+        }
+
+        result?.save().then(() => {
+          res.json("Participant updated!");
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      });
+  }
+);
+
+route.delete(
+  "/updateRaffle/:code/participant/remove/:id",
+  (req: Request, res: Response) => {
+    const { code, id } = req.params;
+
+    Raffle.findOne({ code })
+      .then((result) => {
+        result?.participants.splice(parseInt(id), 1);
+
+        result?.save().then(() => {
+          res.json("Participant removed!");
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      });
   }
 );
 
@@ -163,14 +178,12 @@ route.delete("/deleteRaffle/:code", async (req: Request, res: Response) => {
   const raffle = await Raffle.findOne({ code }).exec();
 
   if (!raffle) {
-    res
-      .status(204)
-      .send(`Cannot delete inexistent raffle - ${code}`);
+    res.status(204).send(`Cannot delete inexistent raffle - ${code}`);
     return;
   }
 
   Raffle.deleteOne({ code }).then(() => {
-    res.send(`Raffle ${code} deleted`);
+    res.json(`Raffle ${code} deleted`);
   });
 });
 
@@ -194,7 +207,7 @@ route.post("/startRaffle", async (req: Request, res: Response) => {
     sendMail(draftedParticipants[i], code);
   }
 
-  res.send("Raffle started!");
+  res.json("Raffle started!");
 });
 
 app.listen(port, () => {
