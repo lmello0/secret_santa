@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { SecretSantaService } from '../secret-santa.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IRaffle } from './raffle';
@@ -9,7 +9,7 @@ import { ModalComponent } from '../modal/modal.component';
   templateUrl: './raffle.component.html',
   styleUrls: ['./raffle.component.css'],
 })
-export class RaffleComponent implements OnInit {
+export class RaffleComponent implements OnInit, AfterViewInit {
   constructor(
     private service: SecretSantaService,
     private route: ActivatedRoute,
@@ -17,7 +17,9 @@ export class RaffleComponent implements OnInit {
   ) {}
 
   @Input() raffle: IRaffle = {} as IRaffle;
-  canSave: Boolean = false;
+  
+  @ViewChild(ModalComponent) modal!: ModalComponent;
+  raffleAlreadyStarted: any;
 
   private chars: string[] = [
     ...'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%&*',
@@ -34,7 +36,11 @@ export class RaffleComponent implements OnInit {
           }
 
           this.raffle = data;
-        
+
+          if (this.raffle.started) {
+            this.raffleAlreadyStarted.toggle();
+          }
+
           for (let i = 0; i < this.raffle.participants.length; i++) {
             this.raffle.participants[i].id = i + 1;
           }
@@ -44,11 +50,16 @@ export class RaffleComponent implements OnInit {
       this.raffle = {
         code: this.generateCode(),
         adminCode: this.generateAdminCode(),
+        budget: 0,
         participants: [],
         started: false,
         version: 0,
       };
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.raffleAlreadyStarted = this.modal;
   }
 
   generateAdminCode(): string {
@@ -73,10 +84,6 @@ export class RaffleComponent implements OnInit {
 
     code = code.slice(0, 11);
     return code;
-  }
-
-  onCanSave() {
-    this.canSave = true;
   }
 }
 

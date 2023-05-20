@@ -1,7 +1,14 @@
 <content>
     <h1>{{ this.raffle.code }}</h1>
 
-    <app-menu [raffle]="raffle" [canSave]="this.canSave"></app-menu>
+    <app-menu [raffle]="raffle"></app-menu>
     
-    <app-participants-list [participants]="raffle.participants" (canSave)="onCanSave()"></app-participants-list>
+    <app-participants-list [raffle]="raffle"></app-participants-list>
+
 </content>
+
+
+<app-modal #raffleAlreadyStarted class="modal">
+    <h1>#Amigo secreto já iniciado!</h1>
+    <p>Esse amigo secreto já foi iniciado, e não é mais possível interagir com o mesmo!</p>
+</app-modal>

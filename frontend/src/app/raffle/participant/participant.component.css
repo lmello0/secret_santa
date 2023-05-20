@@ -83,7 +83,7 @@
 
 .card-del-button:hover {
   cursor: pointer;
-  background-color: var(--hover-red);
+  filter: brightness(70%);
 }
 
 .card-edit-button {
@@ -92,34 +92,10 @@
 }
 
 .card-edit-button:hover {
-  background-color: var(--hover-green);
+  filter: brightness(70%);
 }
 
 /* modal */
-.modal {
-  background: var(--white);
-  border-radius: 20px;
-  box-shadow: 0px 0px 20px 0px #000;
-  min-width: 275px;
-  position: fixed;
-  left: 50%;
-  padding: 24px;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 11;
-}
-
-.overlay {
-  background-color: rgba(0, 0, 0, 0.4);
-  height: 100vh;
-  left: 0;
-  backdrop-filter: blur(5px);
-  position: fixed;
-  top: 0;
-  width: 100vw;
-  z-index: 10;
-}
-
 .cool-input {
   display: flex;
   flex-direction: column;

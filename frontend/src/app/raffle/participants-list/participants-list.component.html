@@ -1,8 +1,8 @@
 <div class="container">
     <div class="wrapper">
       <div class="participants-list">
-        <div class="participant-wrapper" *ngFor="let participant of participants; let i = index">
-          <app-participant [participant]="participant" (participantChange)="this.participants[i]=$event" (destroy)="onDeleteParticipant($event)" (participantChange)="onParticipantChange()"></app-participant>
+        <div class="participant-wrapper" *ngFor="let participant of this.raffle.participants; let i = index">
+          <app-participant [participant]="participant" (participantChange)="onParticipantChange($event)" (destroy)="onDeleteParticipant($event)" [canDelete]="this.canDeleteParticipant()"></app-participant>
         </div>
       </div>
     </div>

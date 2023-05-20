@@ -1,6 +1,7 @@
 import { Schema, model, connect } from 'mongoose';
 
-export interface IParticipants {
+export interface IParticipant {
+    id?: number,
     name: string,
     email: string
 }
@@ -8,21 +9,23 @@ export interface IParticipants {
 export interface IRaffle {
     code: string,
     adminCode: string,
-    participants: [IParticipants],
+    budget: number,
+    participants: [IParticipant],
     started: boolean,
     version: number
 }
 
 const MONGO_URI: string = process.env.DB_CONNSTRING!;
 
-const participantsSchema = new Schema<IParticipants>({
+const participantsSchema = new Schema<IParticipant>({
     name: { type: String, required: true },
     email: { type: String, required: true }
-}, { _id: false });
+});
 
 const raffleSchema = new Schema<IRaffle>({
     code: { type: String, required: true, unique: true },
     adminCode: { type: String, required: true },
+    budget: { type: Number, required: true },
     participants: { type: [participantsSchema], default: [] },
     started: { type: Boolean, default: false }
 });
