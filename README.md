@@ -11,8 +11,8 @@ Amigo secreto sem necessidade de cadastro.
 
 1. Baixe o repositório
 2. Abra o terminal e navegue até o repositório baixado
-3. Rode o seguinte comando `docker compose up`
-4. Agora basta fazer os comandos para `localhost:3000`
+3. Rode o seguinte comando `docker compose up --build`
+4. Agora basta ir para http://localhost:8080 e a aplicação já online
 
 ## Participantes
 
