@@ -1,0 +1,51 @@
+.toast {
+    background: var(--main-blue);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px #333;
+    min-width: fit-content;
+    min-height: 50px;
+    position: absolute;
+    left: 1%;
+    top: 93%;
+    padding: 0 50px;
+}
+
+.content {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close-button {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+
+    background-color: transparent;
+    outline: none;
+    border: none;
+    cursor: pointer;
+
+    color: var(--main-blue);
+    filter: brightness(60%) invert(70%);
+    transition: 100ms ease-in-out;
+}
+
+.close-button:hover {
+    filter: brightness(90%) invert(90%);
+}
+
+.close-button:active {
+    filter: brightness(100%) invert(90%);
+    transform: translateY(1px);
+}
+
+@media only screen and (max-width: 1248px) {
+    .toast {
+        padding: 0 20px;
+        left: 2%;
+        top: 91%;
+    }
+}

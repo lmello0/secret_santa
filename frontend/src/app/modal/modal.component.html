@@ -1,6 +1,6 @@
 <ng-container *ngIf="show">
-  <div class="modal">
+  <div class="modal" @modal>
     <ng-content></ng-content>
   </div>
-  <div class="overlay"></div>
+  <div class="overlay" @overlay></div>
 </ng-container>

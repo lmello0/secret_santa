@@ -1,0 +1,12 @@
+<nav class="menu-h">
+    <ul>
+        <li><a routerLink="/home">Home</a></li>
+        <li><a [routerLink]="linkInfo.url">{{ linkInfo.title }}</a></li>
+        <li>
+            <form [formGroup]="searchForm">
+                <input class="search" type="text" placeholder="Código do sorteio" formControlName="search">
+                <button class="search-btn" [disabled]="!this.searchForm.valid ? true : null"><i class="fa-solid fa-search" (click)="redirect()"></i></button>
+            </form>
+        </li>
+    </ul>
+</nav>

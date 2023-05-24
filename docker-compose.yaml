@@ -28,6 +28,18 @@ services:
     networks:
       - default
 
+  frontend:
+      container_name: secret_santa_frontend
+      build: ./frontend
+      ports:
+        - "8080:80"
+      restart: unless-stopped
+      depends_on:
+        - database
+        - backend
+      networks:
+        - default
+
 networks:
   default:
     driver: bridge

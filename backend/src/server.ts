@@ -6,8 +6,7 @@ import cors from "cors";
 dotenv.config();
 
 import Raffle from "./database";
-import { draft, sendMail } from "./utils";
-import { ObjectId } from "mongodb";
+import { draft, send } from "./utils";
 
 const port = process.env.PORT;
 
@@ -187,27 +186,32 @@ route.delete("/deleteRaffle/:code", async (req: Request, res: Response) => {
   });
 });
 
-route.post("/startRaffle", async (req: Request, res: Response) => {
-  const { code, adminCode, participants } = req.body;
+route.get("/startRaffle/:code", async (req: Request, res: Response) => {
+  const { code } = req.params;
 
-  await Raffle.findOneAndUpdate(
-    { code },
-    {
-      code,
-      adminCode,
-      participants,
-      started: true,
-    },
-    { new: true }
-  );
+  Raffle.findOne({ code }).exec()
+    .then((result) => {
+      if (!result) {
+        res.sendStatus(204);
+        return;
+      }
 
-  const draftedParticipants = draft(participants);
+      const draftedParticipants = draft(result.participants);
 
-  for (let i = 0; draftedParticipants.length; i++) {
-    sendMail(draftedParticipants[i], code);
-  }
+      draftedParticipants.forEach(participant => {
+        send(participant, code, String(result.budget));
+      })
 
-  res.json("Raffle started!");
+      result.started = true;
+      result.save()
+        .then(() => {
+          res.json('Raffle started!');
+        })
+    })
+    .catch((err) => {
+      console.log(err);
+      res.sendStatus(500);
+    });
 });
 
 app.listen(port, () => {

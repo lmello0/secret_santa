@@ -1,19 +1,20 @@
-<div class="container">
-  <div class="wrapper">
-    <div class="inside">
+<app-navbar></app-navbar>
 
+<content>  
+  <div class="container">
+    <div class="grid">
       <div class="card">
         <h2 class="title">Sobre</h2>
         <p>
           Projeto desenvolvido para facilitar a criação de amigos secreto, sem
-          necessidade de criação de conta e o resultado do sorteio vai direto
-          para o email.
+          necessidade de criação de conta e o resultado do sorteio vai direto para
+          o email.
         </p>
       </div>
-
+  
       <div class="card">
         <h2 class="title">Integrantes</h2>
-        <table>
+        <table class="developers">
           <tbody>
             <tr>
               <td>Ashlley Maria de Lima Assis</td>
@@ -38,18 +39,30 @@
           </tbody>
         </table>
       </div>
-
+  
       <div class="card">
         <h2 class="title">Tecnologias</h2>
-        <ul>
-          <li>MongoDB</li>
-          <li>Express</li>
-          <li>Angular</li>
-          <li>NodeJS</li>
-        </ul>
+        <table class="techs">
+          <tbody>
+            <tr>
+              <td class="fit"><i class="fa-solid fa-database"></i></td>
+              <td><a href="https://www.mongodb.com/" target="_blank">MongoDB</a></td>
+            </tr>
+            <tr>
+              <td class="fit"><i class="fa-solid fa-server"></i></td>
+              <td><a href="https://expressjs.com/" target="_blank">Express</a></td>
+            </tr>
+            <tr>
+              <td class="fit"><i class="fa-brands fa-angular"></i></td>
+              <td><a href="https://angular.io/" target="_blank">Angular</a></td>
+            </tr>
+            <tr>
+              <td class="fit"><i class="fa-brands fa-node"></i></td>
+              <td><a href="https://nodejs.org/en" target="_blank">NodeJS</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-
     </div>
   </div>
-</div>
+</content>

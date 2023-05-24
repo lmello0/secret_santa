@@ -1,7 +1,9 @@
 import { IParticipant } from "./database";
 import { createTransport } from "nodemailer";
-import { hashSync, genSaltSync, hash } from "bcryptjs";
+import { hashSync, genSaltSync } from "bcryptjs";
+import * as path from 'path';
 
+const hbs = require('nodemailer-express-handlebars');
 interface IDraft {
     sender: IParticipant,
     recipient: IParticipant
@@ -20,17 +22,27 @@ const transporter = createTransport({
     }
 });
 
+const handlebarOptions = {
+    viewEngine: {
+        partialsDir: path.resolve('./email/'),
+        defaultLayout: false,
+    },
+    viewPath: path.resolve('./email/')
+};
+
+transporter.use('compile', hbs(handlebarOptions));
+
 export function draft(participants: IParticipant[]): IDraft[] {
     let recipients: IParticipant[] = [];
 
     let cont: number = 0;
     while(cont == 0) {
         let redo: boolean = false;
-        let possibleSanta: IParticipant[] = participants;
+        let possibleSanta: IParticipant[] = participants.slice();
 
         const draftLength: number = possibleSanta.length;
 
-        for(let i: number = 0; i < draftLength; i ++) {
+        for(let i: number = 0; i < draftLength; i++) {
             let recipIdx: number = Math.floor(Math.random() * possibleSanta.length);
 
             let x: number = 0;
@@ -68,11 +80,17 @@ export function draft(participants: IParticipant[]): IDraft[] {
     return returnData;
 }
 
-export function sendMail(draft: IDraft, code: string): void {
+export function send(draft: IDraft, code: string, budget: string): void {
     const mailData = {
         subject: `Pessoa sorteada: [${code}]`,
-        text: `[${code}]\n\nVocê tirou ${draft.recipient.name}`,
-        to: draft.sender.email
+        to: draft.sender.email,
+        template: 'email',
+        context: {
+            code: code,
+            sender: draft.sender.name,
+            recipient: draft.recipient.name,
+            budget: `R$${budget},00`
+        }
     }
 
     transporter.sendMail(mailData);

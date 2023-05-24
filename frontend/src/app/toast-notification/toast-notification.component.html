@@ -1,0 +1,8 @@
+<ng-container *ngIf="show">
+    <div class="toast" @enter>
+        <div class="content">
+            <ng-content></ng-content>
+            <button class="close-button" (click)="toggle()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    </div>
+</ng-container>

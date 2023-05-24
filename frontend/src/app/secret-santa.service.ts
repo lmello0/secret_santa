@@ -36,12 +36,6 @@ export class SecretSantaService {
     return this.http.delete<IRaffle>(url);
   }
 
-  startRaffle(code: String): Observable<IRaffle> {
-    const url = `${this.API}/startRaffle`;
-
-    return this.http.post<IRaffle>(url, code);
-  }
-
   addParticipant(code: String, participant: IParticipant): Observable<IParticipant> {
     const url = `${this.API}/updateRaffle/${code}/participant/add`;
 
@@ -58,5 +52,11 @@ export class SecretSantaService {
     const url = `${this.API}/updateRaffle/${code}/participant/edit/${participant.id!}`;
 
     return this.http.put<IParticipant>(url, participant);
+  }
+
+  startRaffle(code: String): Observable<IRaffle> {
+    const url = `${this.API}/startRaffle/${code}/`
+
+    return this.http.get<IRaffle>(url);
   }
 }

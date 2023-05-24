@@ -26,7 +26,7 @@ export class RaffleComponent implements OnInit, AfterViewInit {
   ];
 
   ngOnInit(): void {
-    const code = this.route.snapshot.paramMap.get('code');
+    const code = this.route.snapshot.paramMap.get('code'); //asdasdfhtyhsdfgd
 
     if (code != null) {
       this.service.getRaffle(code!)
@@ -50,7 +50,7 @@ export class RaffleComponent implements OnInit, AfterViewInit {
       this.raffle = {
         code: this.generateCode(),
         adminCode: this.generateAdminCode(),
-        budget: 0,
+        budget: null,
         participants: [],
         started: false,
         version: 0,

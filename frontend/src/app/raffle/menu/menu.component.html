@@ -1,126 +1,167 @@
-<content>
-  <div class="container">
-    <div class="wrapper">
-      <form [formGroup]="addForm">
-        <ul class="panel add-panel">
-          <li>
-            <input type="text" placeholder="Nome" formControlName="name" [ngClass]="validateForm(this.addForm.get('name')?.errors, this.addForm.get('name')?.touched)" />
-          </li>
+<content class="grid">
 
-          <li>
-            <input type="text" placeholder="Email" formControlName="email" [ngClass]="validateForm(this.addForm.get('email')?.errors, this.addForm.get('email')?.touched)" />
-          </li>
-          <li>
-            <button
-              class="add-btn btn"
-              [disabled]="!addForm.valid"
-              (click)="addParticipant()"
-              (mouseenter)="showCopyModal()"
-              (mouseleave)="leaveModal()"
-              (focus)="showCopyModal()"
-              (focusout)="leaveModal()"
-              [ngClass]="allowButtonAddPanel()"
-            >
-              <i class="fa-solid fa-plus"></i>
-            </button>
-          </li>
-        </ul>
-      </form>
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="wrapper">
-      <div
-        class="notation"
-        *ngIf="this.currentUrl == '/raffle/new' && !this.copyBtnClicked"
-      >
-        <h2>Copie esse código, ele só aparecerá dessa vez!</h2>
+  <div class="grid-child">
+    <div class="container bg-deep-blue box-shadow">
+      <div class="flex">
+        <form [formGroup]="addForm">
+          <ul class="flex flex-direction participant-control">
+            <li>
+              <input
+                type="text"
+                placeholder="Nome"
+                formControlName="name"
+                [ngClass]="
+                  validateForm(
+                    this.addForm.get('name')?.errors,
+                    this.addForm.get('name')?.touched
+                  )
+                "
+              />
+            </li>
+            <li>
+              <input
+                type="text"
+                placeholder="Email"
+                formControlName="email"
+                [ngClass]="
+                  validateForm(
+                    this.addForm.get('email')?.errors,
+                    this.addForm.get('email')?.touched
+                  )
+                "
+              />
+            </li>
+            <li>
+              <button
+                class="btn bg-green"
+                [disabled]="!addForm.valid"
+                (click)="addParticipant()"
+                (mouseenter)="showCopyModal()"
+                (mouseleave)="leaveModal()"
+                (focus)="showCopyModal()"
+                (focusout)="leaveModal()"
+                [ngClass]="allowButtonAddPanel()"
+              >
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </li>
+          </ul>
+        </form>
       </div>
-      <form [formGroup]="adminForm">
-        <ul class="panel admin-panel">
-          <li>
-            <input
-              type="text"
-              placeholder="Orçamento"
-              formControlName="budget"
-              (input)="formatBudget($event)"
-              [value]="this.raffle.budget"
-              [ngClass]="validateForm(this.adminForm.get('budget')?.errors, this.adminForm.get('budget')?.touched)"
-            />
-          </li>
-          <li>
-            <input
-              class="admin-code"
-              type="text"
-              placeholder="Código de admin"
-              formControlName="adminCode"
-              [ngClass]="validateForm(this.adminForm.get('adminCode')?.errors, this.adminForm.get('adminCode')?.touched)"
-            />
-
-            <button
-              class="copy-btn btn"
-              title="Copiar link amigo secreto"
-              (click)="copyAdminCode()"
-            >
-              <i class="fa-solid fa-copy"></i>
-            </button>
-            <button
-              class="start-btn btn"
-              title="Iniciar amigo secreto"
-              [disabled]="
-                this.adminForm.valid && this.raffle.participants.length >= 4
-                  ? null
-                  : true
-              "
-              [ngClass]="allowButtonControlPanel()"
-              (click)="startSecretSanta()"
-            >
-              Iniciar
-            </button>
-          </li>
-        </ul>
-        <div
-          class="copy-message"
-          id="copy-message"
-          [hidden]="isCopyMessageHidden"
-        >
-          Código copiado!
-        </div>
-      </form>
     </div>
   </div>
 
-  <div class="container">
-    <div class="wrapper">
-      <ul class="panel">
-        <li>
-          <!-- <button
-            class="add-btn"
-            (click)="this.currentUrl == '/raffle/new' ? !this.copyBtnClicked ? confirmCopyAdminCode.toggle() : saveData() : saveData()"
-            [disabled]="!this.canSave ? true : null"
-            [ngClass]="allowSaveButton()"
+  <div class="grid-child">
+    <div class="container bg-deep-blue box-shadow">
+      <div class="flex">
+        <!-- <div
+          class="notation"
+          *ngIf="this.currentUrl == '/raffle/new' && !this.copyBtnClicked"
+        >
+          <h2>Copie esse código, ele só aparecerá dessa vez!</h2>
+        </div> -->
+        <form [formGroup]="adminForm">
+          <ul class="flex flex-direction">
+            <li>
+              <input
+                type="number"
+                min="0.00"
+                step="0.01"
+                placeholder="Valor do presente"
+                formControlName="budget"
+                [value]="this.raffle.budget"
+                [ngClass]="
+                  validateForm(
+                    this.adminForm.get('budget')?.errors,
+                    this.adminForm.get('budget')?.touched
+                  )
+                "
+              />
+            </li>
+            <li>
+              <div class="flex admin-code-control">
+                <input #adminCodeInput
+                  class="admin-code-input"
+                  type="text"
+                  placeholder="Código de admin"
+                  formControlName="adminCode"
+                  [ngClass]="
+                    validateForm(
+                      this.adminForm.get('adminCode')?.errors,
+                      this.adminForm.get('adminCode')?.touched
+                    )
+                  "
+                />
+                <button
+                  class="btn bg-green"
+                  title="Copiar link amigo secreto"
+                  (click)="copyAdminCode()"
+                >
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+                <button
+                  class="btn bg-green"
+                  title="Iniciar amigo secreto"
+                  [disabled]="
+                    this.adminForm.valid && this.raffle.participants.length >= 4
+                      ? null
+                      : true
+                  "
+                  [ngClass]="allowButtonControlPanel()"
+                  (click)="startSecretSanta()"
+                >
+                  Iniciar
+                </button>
+              </div>
+            </li>
+          </ul>
+          <!-- <div
+            class="copy-message"
+            id="copy-message"
+            [hidden]="isCopyMessageHidden"
           >
-            <i [ngClass]="savedBtnClass.class"></i>
-            {{ this.savedBtnClass.text }}
-          </button> -->
-          <button
-            class="del-btn btn"
-            (click)="confirmDelete.toggle()"
-            [disabled]="this.currentUrl == '/raffle/new' ? true : null"
-            [ngClass]="
-              this.currentUrl == '/raffle/new' ? 'btn btn-disabled' : 'btn'
-            "
-            [title]="
-              this.currentUrl == '/raffle/new'
-                ? 'Não é possível deletar um novo amigo secreto'
-                : 'Deletar amigo secreto'
-            "
-          >
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </li>
-      </ul>
+            Código copiado!
+          </div> -->
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-child">
+    <div class="container bg-deep-blue box-shadow">
+      <div class="flex">
+        <ul class="flex flex-direction control-panel">
+          <li>
+            <button #copyButton
+              class="btn bg-green copy-btn"
+              (click)="copyRaffleCode()"
+              
+              [ngClass]="!this.adminForm.get('budget')?.valid ? 'btn btn-disabled' : 'btn'"
+              title="Copiar link do amigo secreto"
+            >
+              <i class="fa-solid fa-link"></i>
+              {{ copyButtonText }}
+            </button>
+          </li>
+          <li>
+            <button
+              class="btn bg-red"
+              (click)="confirmDelete.toggle()"
+              [disabled]="this.currentUrl == '/raffle/new' ? true : null"
+              [ngClass]="
+                this.currentUrl == '/raffle/new' ? 'btn btn-disabled' : 'btn'
+              "
+              [title]="
+                this.currentUrl == '/raffle/new'
+                  ? 'Não é possível deletar um novo amigo secreto'
+                  : 'Deletar amigo secreto'
+              "
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </content>
@@ -133,14 +174,14 @@
     >? Essa ação é irreversível.
   </p>
 
-  <ul class="panel">
+  <ul class="flex flex-direction">
     <li>
-      <button class="btn add-btn" (click)="deleteRaffle()">
+      <button class="btn bg-green" (click)="deleteRaffle()">
         <i class="fa-solid fa-check"></i> Deletar
       </button>
     </li>
     <li>
-      <button class="btn del-btn" (click)="confirmDelete.toggle()">
+      <button class="btn bg-red" (click)="confirmDelete.toggle()">
         <i class="fa-solid fa-xmark"></i> Cancelar
       </button>
     </li>
@@ -151,21 +192,32 @@
   <h1>#Copiar código de admin!</h1>
   <p>
     Salve o código de admin! Ele só aparecerá uma vez. Será necessário para
-    iniciar o amigo secreto. <br />
+    iniciar o amigo secreto.</p>
+  <p>
     <strong>Código: </strong> {{ this.raffle.adminCode }}
   </p>
 
   <ul class="panel">
     <li>
       <button
-        class="btn add-btn"
+        class="btn bg-green"
         (click)="copyAdminCode(); confirmCopyAdminCode.toggle()"
       >
         <i class="fa-solid fa-copy"></i>
       </button>
     </li>
   </ul>
-  <div class="copy-message" id="copy-message" [hidden]="isCopyMessageHidden">
-    Código copiado!
-  </div>
 </app-modal>
+
+<app-modal #startRaffleModal class="modal">
+  <h1>#Amigo secreto iniciado!</h1>
+  <p>Você acabou de iniciar o amigo secreto e não poderá mais interagir com o mesmo!</p>
+</app-modal>
+
+<app-toast-notification #copyCodeNotification class="toast">
+  <p>Código copiado!</p>
+</app-toast-notification>
+
+<app-toast-notification #invalidBudgetNotification class="toast">
+  <p>O orçamento do sorteio é inválido!</p>
+</app-toast-notification>

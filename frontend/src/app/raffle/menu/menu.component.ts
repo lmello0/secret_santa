@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { IRaffle } from '../raffle';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, TitleStrategy } from '@angular/router';
 import { SecretSantaService } from 'src/app/secret-santa.service';
 import { IParticipant } from '../participant';
 import { ModalComponent } from 'src/app/modal/modal.component';
@@ -27,12 +27,20 @@ export class MenuComponent implements OnInit, AfterViewInit {
   
   currentUrl: string = this.router.url;
   
-  isCopyMessageHidden: Boolean = true;
+  @ViewChildren(ModalComponent) modalsRef!: QueryList<ModalComponent>;
+  @ViewChild('adminCodeInput') adminCodeInputRef!: ElementRef;
+  @ViewChild('copyCodeNotification') copyCoadToastRef!: ElementRef;
+  @ViewChild('invalidBudgetNotification') invalidBudgetNotificationRef!: ElementRef;
   
-  @ViewChildren(ModalComponent) modals!: QueryList<ModalComponent>;
+  invalidBudgetToast: any;
+  copyCodeToast: any;
+  adminCodeInput: any;
+  confirmCopyAdminCodeModal: any;
+  raffleStartedModal: any;
 
-  confirmCopyAdminCode: any;
   showModal: any;
+
+  copyButtonText: string = 'Mande para seus amigos!'
 
   ngOnInit(): void {
     this.addForm = this.formBuilder.group({
@@ -59,7 +67,11 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.confirmCopyAdminCode = this.modals.last;
+    this.confirmCopyAdminCodeModal = this.modalsRef.toArray()[1];
+    this.raffleStartedModal = this.modalsRef.toArray()[2];
+    this.adminCodeInput = this.adminCodeInputRef.nativeElement;
+    this.copyCodeToast = this.copyCoadToastRef;
+    this.invalidBudgetToast = this.invalidBudgetNotificationRef;
   }
 
   allowButtonAddPanel(): string {
@@ -74,15 +86,55 @@ export class MenuComponent implements OnInit, AfterViewInit {
     const adminCode = this.adminForm.get('adminCode')?.value;
     navigator.clipboard.writeText(adminCode);
 
-    this.isCopyMessageHidden = !this.isCopyMessageHidden;
+    this.copyCodeToast.toggle();
     setTimeout(() => {
-      this.isCopyMessageHidden = !this.isCopyMessageHidden;
-    }, 5000);
+      if (this.copyCodeToast.show){
+        this.copyCodeToast.toggle();
+      }
+    }, 10000);
 
     this.copyBtnClicked = true;
   }
 
+  copyRaffleCode() {
+    if (!this.adminForm.get('budget')?.valid) {
+      this.invalidBudgetToast.toggle();
+      setTimeout(() => {
+        if (this.invalidBudgetToast.show) {
+          this.invalidBudgetToast.toggle();
+        }
+      }, 10000);
+      return;
+    }
+
+    this.raffle.budget = this.adminForm.get('budget')?.value;
+
+    if (this.currentUrl == '/raffle/new') {
+      this.service.createRaffle(this.raffle).subscribe();
+    }
+
+    const url = window.location.href.replace('/new', `/existent/${this.raffle.code}`);
+    navigator.clipboard.writeText(url);
+
+    this.copyButtonText = 'Link copiado!'
+    setTimeout(() => {
+      this.copyButtonText = 'Mande para seus amigos!'
+    }, 3000);
+  }
+
   addParticipant() {
+    if (!this.adminForm.get('budget')?.valid) {
+      this.invalidBudgetToast.toggle();
+      setTimeout(() => {
+        if (this.invalidBudgetToast.show) {
+          this.invalidBudgetToast.toggle();
+        }
+      }, 10000);
+      return;
+    }
+
+    this.raffle.budget = this.adminForm.get('budget')?.value;
+
     const participant: IParticipant = {
       id: this.raffle.participants.length + 1,
       name: this.addForm.get('name')?.value,
@@ -115,14 +167,21 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   startSecretSanta() {
-    console.log(this.raffle);
+    const adminCode = this.adminForm.get('adminCode')?.value;
+    this.adminCodeInput.classList.toggle('invalid-form', adminCode != this.raffle.adminCode);
+
+    if (this.adminForm.get('adminCode')?.value == adminCode) {
+      this.service.startRaffle(this.raffle.code).subscribe(() => {
+        this.raffleStartedModal.toggle();
+      });
+    }
   }
 
   showCopyModal() {
     if (!this.copyBtnClicked )
     if (!this.copyBtnClicked && (this.addForm.valid && (this.raffle.participants.length == 0 && this.addForm.valid))) {
       this.showModal = setTimeout(() => {
-        this.confirmCopyAdminCode.toggle();
+        this.confirmCopyAdminCodeModal.toggle();
       }, 300);
     }
   }

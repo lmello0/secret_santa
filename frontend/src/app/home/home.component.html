@@ -10,19 +10,23 @@
           <input
             class="access-code"
             type="text"
-            placeholder="COPIE O CÓDIGO DE ACESSO AQUI..."
+            placeholder="Código de acesso"
             maxlength="11"
             formControlName="raffleId"
           />
-          <button (click)="redirect()" class="enter-btn"><i class="fa-solid fa-arrow-right"></i></button>
+          <button [disabled]="!this.redirectForm.valid ? true : null" (click)="redirect()" class="btn redirect-btn"><i class="fa-solid fa-arrow-right"></i></button>
         </div>
       </form>
 
       <p>OU</p>
 
       <a routerLink="/raffle/new">
-        <button class="new-raffle-btn">CLIQUE AQUI PARA INICIAR UM NOVO AMIGO SECRETO</button>
+        <button class="btn new-btn">Iniciar um novo amigo secreto</button>
       </a>
     </div>
+
+    <button class="btn about-btn" routerLink="/about">
+      Sobre
+    </button>
   </div>
 </body>

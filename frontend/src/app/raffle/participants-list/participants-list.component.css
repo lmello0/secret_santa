@@ -6,8 +6,7 @@
   display: flex;
   justify-content: center;
   min-height: 125px;
-  width: 1050.53px;
-
+  width: calc(350px*3);
   padding: 20px;
 }
 
@@ -28,4 +27,14 @@
   align-items: center;
   display: flex;
   justify-content: center;
+}
+
+@media only screen and (max-width: 1248px) {
+  .container {
+    width: 315px;
+  }
+
+  .participants-list {
+    grid-template-columns: auto;
+  }
 }
