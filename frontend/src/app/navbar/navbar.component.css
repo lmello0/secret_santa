@@ -1,6 +1,6 @@
 .menu-h {
     background-color: var(--main-blue);
-    width: 100vw;
+    width: 100%;
 }
 
 .menu-h ul {
@@ -67,32 +67,11 @@ form {
     display: inline;
 }
 
-/* @media only screen and (max-width: 1248px) {
-    ul {
-        width: 100%;
-        font-size: 0.9em;
-        display: inline-block;
-    }
-    
-    input {
-        width: 70px;
-    }
-    
-    ul li:nth-child(3) a {
-        display: block;
-        width: 200px;
-    }
-
-    .search-btn {
-        padding: 0.7em 0.4em;
-    }
-} */
-
 @media only screen and (max-width: 1248px) {
     .menu-h ul li {
         display: inline-block;
         text-align: center;
-        width: 100%;
+        width: auto;
     }
 
     .menu-h ul li  {

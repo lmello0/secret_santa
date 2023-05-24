@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { IRaffle } from '../raffle';
-import { Router, TitleStrategy } from '@angular/router';
+import { Router } from '@angular/router';
 import { SecretSantaService } from 'src/app/secret-santa.service';
 import { IParticipant } from '../participant';
 import { ModalComponent } from 'src/app/modal/modal.component';
@@ -36,7 +36,6 @@ export class MenuComponent implements OnInit, AfterViewInit {
   copyCodeToast: any;
   adminCodeInput: any;
   confirmCopyAdminCodeModal: any;
-  raffleStartedModal: any;
 
   showModal: any;
 
@@ -63,12 +62,12 @@ export class MenuComponent implements OnInit, AfterViewInit {
       this.adminForm.get('adminCode')?.setValue(this.raffle.adminCode);
     } else {
       this.adminForm.get('budget')?.disable();
+      this.adminForm.get('budget')?.setValue(this.raffle.budget);
     }
   }
 
   ngAfterViewInit(): void {
     this.confirmCopyAdminCodeModal = this.modalsRef.toArray()[1];
-    this.raffleStartedModal = this.modalsRef.toArray()[2];
     this.adminCodeInput = this.adminCodeInputRef.nativeElement;
     this.copyCodeToast = this.copyCoadToastRef;
     this.invalidBudgetToast = this.invalidBudgetNotificationRef;
@@ -97,7 +96,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   copyRaffleCode() {
-    if (!this.adminForm.get('budget')?.valid) {
+    if (!this.adminForm.get('budget')?.valid && this.currentUrl == '/raffle/new') {
       this.invalidBudgetToast.toggle();
       setTimeout(() => {
         if (this.invalidBudgetToast.show) {
@@ -107,9 +106,9 @@ export class MenuComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.raffle.budget = this.adminForm.get('budget')?.value;
-
+    
     if (this.currentUrl == '/raffle/new') {
+      this.raffle.budget = this.adminForm.get('budget')?.value;
       this.service.createRaffle(this.raffle).subscribe();
     }
 
@@ -123,7 +122,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   addParticipant() {
-    if (!this.adminForm.get('budget')?.valid) {
+    if (!this.adminForm.get('budget')?.valid && this.currentUrl == '/raffle/new') {
       this.invalidBudgetToast.toggle();
       setTimeout(() => {
         if (this.invalidBudgetToast.show) {
@@ -132,9 +131,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
       }, 10000);
       return;
     }
-
-    this.raffle.budget = this.adminForm.get('budget')?.value;
-
+    
     const participant: IParticipant = {
       id: this.raffle.participants.length + 1,
       name: this.addForm.get('name')?.value,
@@ -142,6 +139,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     }
     
     if (this.currentUrl == '/raffle/new') {
+      this.raffle.budget = this.adminForm.get('budget')?.value;
       this.raffle.participants.push(participant);
 
       this.service.createRaffle(this.raffle)
@@ -170,9 +168,9 @@ export class MenuComponent implements OnInit, AfterViewInit {
     const adminCode = this.adminForm.get('adminCode')?.value;
     this.adminCodeInput.classList.toggle('invalid-form', adminCode != this.raffle.adminCode);
 
-    if (this.adminForm.get('adminCode')?.value == adminCode) {
+    if (this.raffle.adminCode == adminCode) {
       this.service.startRaffle(this.raffle.code).subscribe(() => {
-        this.raffleStartedModal.toggle();
+        window.location.reload();
       });
     }
   }

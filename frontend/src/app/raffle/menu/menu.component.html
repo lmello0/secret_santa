@@ -136,7 +136,7 @@
               class="btn bg-green copy-btn"
               (click)="copyRaffleCode()"
               
-              [ngClass]="!this.adminForm.get('budget')?.valid ? 'btn btn-disabled' : 'btn'"
+              [ngClass]="!this.adminForm.get('budget')?.valid && this.currentUrl == '/raffle/new' ? 'btn btn-disabled' : 'btn'"
               title="Copiar link do amigo secreto"
             >
               <i class="fa-solid fa-link"></i>
@@ -207,11 +207,6 @@
       </button>
     </li>
   </ul>
-</app-modal>
-
-<app-modal #startRaffleModal class="modal">
-  <h1>#Amigo secreto iniciado!</h1>
-  <p>Você acabou de iniciar o amigo secreto e não poderá mais interagir com o mesmo!</p>
 </app-modal>
 
 <app-toast-notification #copyCodeNotification class="toast">

@@ -3,7 +3,7 @@ content {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: 100vh;
     width: auto;
 }
 
@@ -19,6 +19,7 @@ app-navbar {
     position: absolute;
     left: 0;
     z-index: 9999 !important;
+    width: 100%;
 }
 
 app-modal {
@@ -38,6 +39,14 @@ app-modal {
 }
 
 @media only screen and (max-width: 1248px) {
+    app-navbar {
+        position: inherit;
+    }
+
+    app-modal {
+        position: inherit;
+    }
+
     .modal p {
         margin-bottom: 25px;
     }    
