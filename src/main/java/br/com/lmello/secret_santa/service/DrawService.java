@@ -9,7 +9,6 @@ import br.com.lmello.secret_santa.model.DrawResult;
 import br.com.lmello.secret_santa.model.Participant;
 import br.com.lmello.secret_santa.repository.DrawRepository;
 import br.com.lmello.secret_santa.repository.DrawResultRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,54 +94,6 @@ public class DrawService {
         draw.startDraw();
 
         return drawResult;
-    }
-
-    private List<DrawResult> draft(Draw draw) {
-        Random rand = new Random();
-        List<DrawResult> results = new ArrayList<>();;
-
-        boolean retry = true;
-        while (retry) {
-            List<Participant> participants = draw.getParticipants();
-            List<Participant> recipients = draw.getParticipants().stream().map(Participant::new).collect(Collectors.toList());
-            results.clear();
-
-            for (int i = 0; i < 10; i++) {
-                Collections.shuffle(recipients);
-            }
-
-            for (int i = 0; i < participants.size(); i++) {
-                int recipientIdx = rand.nextInt(recipients.size());
-
-                Participant sender = participants.get(i);
-                Participant recipient = recipients.get(recipientIdx);
-
-                boolean isGivingItself = sender.getId().equals(recipient.getId());
-
-                if (isGivingItself && recipients.size() == 1) {
-                    break;
-                }
-
-                while (isGivingItself) {
-                    recipientIdx = rand.nextInt(recipients.size());
-                    recipient = recipients.get(recipientIdx);
-                    isGivingItself = sender.getId().equals(recipient.getId());
-                }
-
-                sender.setTo(recipient);
-                sender.setFrom(sender);
-
-                results.add(new DrawResult(null, draw, sender, recipient));
-
-                recipients.remove(recipient);
-
-                if (i == participants.size() - 1) {
-                    retry = false;
-                }
-            }
-        }
-
-        return results;
     }
 
     private List<DrawResult> draft2(Draw draw) {
