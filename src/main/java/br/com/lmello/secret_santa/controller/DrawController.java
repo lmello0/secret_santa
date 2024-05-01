@@ -32,30 +32,30 @@ public class DrawController {
         Draw draw = drawService.createDraw(drawData);
 
         URI uri = uriComponentsBuilder
-                .path("/draw/{id}")
-                .buildAndExpand(draw.getId())
+                .path("/draw/{code}")
+                .buildAndExpand(draw.getCode())
                 .toUri();
 
         return ResponseEntity.created(uri).body(new DrawDTO(draw));
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> getDraw(@PathVariable String id) {
-        Draw draw = drawService.getDraw(id);
+    @GetMapping("{code}")
+    public ResponseEntity<?> getDraw(@PathVariable String code) {
+        Draw draw = drawService.getDraw(code);
 
         return ResponseEntity.ok(new DrawDTO(draw));
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<?> updateDraw(@PathVariable String id, @Valid @RequestBody DrawDTO drawData) {
-        Draw draw = drawService.updateDraw(id, drawData);
+    @PutMapping("{code}")
+    public ResponseEntity<?> updateDraw(@PathVariable String code, @Valid @RequestBody DrawDTO drawData) {
+        Draw draw = drawService.updateDraw(code, drawData);
 
         return ResponseEntity.ok(new DrawDTO(draw));
     }
 
-    @PostMapping("{id}")
-    public ResponseEntity<?> startDraw(@PathVariable String id, @Valid @RequestBody StartDrawDTO startDrawDTO) {
-        List<DrawResult> drawResult = drawService.startDraw(id, startDrawDTO.adminCode());
+    @PostMapping("{code}")
+    public ResponseEntity<?> startDraw(@PathVariable String code, @Valid @RequestBody StartDrawDTO startDrawDTO) {
+        List<DrawResult> drawResult = drawService.startDraw(code, startDrawDTO.adminCode());
 
         List<DrawEmailDTO> emailList = drawResult.stream()
                 .map(d -> new DrawEmailDTO(
