@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Participant {
+public class Participant extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

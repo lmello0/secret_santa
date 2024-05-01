@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DrawResult {
+public class DrawResult extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

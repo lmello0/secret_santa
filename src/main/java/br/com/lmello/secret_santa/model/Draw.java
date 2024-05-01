@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Table(name = "draws")
@@ -16,7 +17,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Draw {
+public class Draw extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -37,9 +38,8 @@ public class Draw {
 
     private boolean started = false;
 
-    public Draw(DrawDTO drawDTO) {
-        this.code = UUID.randomUUID().toString();
-        this.adminCode = UUID.randomUUID().toString();
+    private LocalDateTime startedAt;
+
     public Draw(DrawDTO drawDTO, List<Participant> participants) {
         this.code = generateCode();
         this.adminCode = generateAdminCode();
@@ -49,6 +49,9 @@ public class Draw {
 
     public void startDraw() {
         this.started = true;
+        this.startedAt = LocalDateTime.now();
+    }
+
     private String generateCode() {
         final int SECTIONS = 3;
         final int SECTION_LENGTH = 3;
