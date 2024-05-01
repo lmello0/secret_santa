@@ -27,7 +27,7 @@ public class Draw {
 
     private int budget;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany
     @JoinTable(
             name = "draws_participants",
             joinColumns = {@JoinColumn(name = "draw_id")},
@@ -40,12 +40,11 @@ public class Draw {
     public Draw(DrawDTO drawDTO) {
         this.code = UUID.randomUUID().toString();
         this.adminCode = UUID.randomUUID().toString();
+    public Draw(DrawDTO drawDTO, List<Participant> participants) {
+        this.code = generateCode();
+        this.adminCode = generateAdminCode();
         this.budget = drawDTO.budget();
-        this.participants = drawDTO.
-                participants().
-                stream().
-                map(Participant::new)
-                .collect(Collectors.toList());
+        this.participants = participants;
     }
 
     public void startDraw() {

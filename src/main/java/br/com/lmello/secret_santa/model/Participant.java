@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Table(name = "participants")
 @Entity(name = "Participant")
 @Getter
@@ -33,18 +31,8 @@ public class Participant {
     @Transient
     private boolean selected = false;
 
-
     public Participant(ParticipantDTO participantDTO) {
         this.name = participantDTO.name();
         this.email = participantDTO.email();
-    }
-
-    public Participant(Participant participant) {
-        this.id = participant.getId();
-        this.name = participant.getName();
-        this.email = participant.getEmail();
-        this.from = participant.getFrom();
-        this.to = participant.getTo();
-        this.selected = participant.isSelected();
     }
 }

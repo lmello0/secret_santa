@@ -9,6 +9,7 @@ import br.com.lmello.secret_santa.model.DrawResult;
 import br.com.lmello.secret_santa.model.Participant;
 import br.com.lmello.secret_santa.repository.DrawRepository;
 import br.com.lmello.secret_santa.repository.DrawResultRepository;
+import br.com.lmello.secret_santa.repository.ParticipantRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +19,27 @@ import java.util.stream.Collectors;
 @Service
 public class DrawService {
     DrawRepository drawRepository;
-
     DrawResultRepository drawResultRepository;
+    ParticipantRepository participantRepository;
 
-    public DrawService(DrawRepository drawRepository, DrawResultRepository drawResultRepository) {
+    public DrawService(DrawRepository drawRepository, DrawResultRepository drawResultRepository, ParticipantRepository participantRepository) {
         this.drawRepository = drawRepository;
         this.drawResultRepository = drawResultRepository;
+        this.participantRepository = participantRepository;
     }
 
     @Transactional
     public Draw createDraw(DrawDTO data) {
-        Draw draw = new Draw(data);
+        List<Participant> participants = data.participants()
+                .stream()
+                .map(p -> participantRepository
+                        .getParticipantByNameAndEmailC(p.name(), p.email())
+                        .orElseGet(() -> new Participant(p)))
+                .toList();
+
+        participantRepository.saveAll(participants);
+
+        Draw draw = new Draw(data, participants);
 
         drawRepository.save(draw);
 
