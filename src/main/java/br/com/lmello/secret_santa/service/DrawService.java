@@ -102,10 +102,11 @@ public class DrawService {
             throw new SecretSantaAlreadyStartedException(code);
         }
 
-        List<DrawResult> drawResult = draft2(draw);
         if (draw.getParticipants().size() < 3) {
             throw new ImpossibleDrawException(code, draw.getParticipants().size());
         }
+
+        List<DrawResult> drawResult = draft(draw);
 
         drawResultRepository.saveAll(drawResult);
         draw.startDraw();
@@ -113,30 +114,51 @@ public class DrawService {
         return drawResult;
     }
 
-    private List<DrawResult> draft2(Draw draw) {
+    public List<DrawResult> draft(Draw draw) {
         Random rand = new Random();
+
         List<Participant> participants = draw.getParticipants();
         List<DrawResult> results = new ArrayList<>(participants.size());
 
         Collections.shuffle(participants);
 
-        for (int i = 0; i < participants.size(); i++) {
-            Participant sender = participants.get(i);
+        boolean redraw;
+        do {
+            redraw = false;
+            results.clear();
+            participants.forEach(p -> p.setSelected(false));
 
-            int recipientIdx = rand.nextInt(participants.size());
-            Participant recipient = participants.get(recipientIdx);
+            for (int i = 0; i < participants.size(); i++) {
+                Participant sender = participants.get(i);
 
-            while(sender.getId().equals(recipient.getId()) || recipient.isSelected()) {
-                recipientIdx = rand.nextInt(participants.size());
-                recipient = participants.get(recipientIdx);
+                int recipientIdx = rand.nextInt(participants.size());
+                Participant recipient = participants.get(recipientIdx);
+
+                while (sender.getId().equals(recipient.getId()) || recipient.isSelected()) {
+                    recipientIdx = rand.nextInt(participants.size());
+                    recipient = participants.get(recipientIdx);
+
+                    long totalAvailable = participants.stream()
+                            .filter(p -> !p.isSelected())
+                            .count();
+
+                    if (totalAvailable <= 1) {
+                        redraw = true;
+                        break;
+                    }
+                }
+
+                if (redraw) {
+                    break;
+                }
+
+                sender.setTo(recipient);
+                sender.setFrom(sender);
+                recipient.setSelected(true);
+
+                results.add(new DrawResult(null, draw, sender, recipient));
             }
-
-            sender.setTo(recipient);
-            sender.setFrom(sender);
-            recipient.setSelected(true);
-
-            results.add(new DrawResult(null, draw, sender, recipient));
-        }
+        } while (redraw);
 
         return results;
     }

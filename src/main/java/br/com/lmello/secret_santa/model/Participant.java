@@ -35,4 +35,14 @@ public class Participant extends Base {
         this.name = participantDTO.name();
         this.email = participantDTO.email();
     }
+
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", selected=" + selected +
+                '}';
+    }
 }
