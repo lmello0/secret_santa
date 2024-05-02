@@ -1,6 +1,7 @@
 package br.com.lmello.secret_santa.service;
 
 import br.com.lmello.secret_santa.dto.DrawDTO;
+import br.com.lmello.secret_santa.exception.ImpossibleDrawException;
 import br.com.lmello.secret_santa.exception.InvalidAdminCodeException;
 import br.com.lmello.secret_santa.exception.NotFoundException;
 import br.com.lmello.secret_santa.exception.SecretSantaAlreadyStartedException;
@@ -102,6 +103,9 @@ public class DrawService {
         }
 
         List<DrawResult> drawResult = draft2(draw);
+        if (draw.getParticipants().size() < 3) {
+            throw new ImpossibleDrawException(code, draw.getParticipants().size());
+        }
 
         drawResultRepository.saveAll(drawResult);
         draw.startDraw();
