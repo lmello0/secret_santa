@@ -31,4 +31,14 @@ public record DrawDTO(
                         .toList()
         );
     }
+
+    public DrawDTO(int budget, List<ParticipantDTO> participants) {
+        this(
+                null,
+                null,
+                false,
+                budget,
+                participants
+        );
+    }
 }
