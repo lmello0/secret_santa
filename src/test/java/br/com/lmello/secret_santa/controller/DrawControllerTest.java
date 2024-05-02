@@ -218,7 +218,7 @@ public class DrawControllerTest {
     @Test
     @DisplayName("Should return a HTTP 200 with a message")
     void startDrawSuccessfully() throws Exception {
-        List<Participant> participants = produceParticipants(new Random().nextInt(3,10));
+        List<Participant> participants = produceParticipants(new Random().nextInt(3, 10));
         Draw draw = drawService.createDraw(new DrawDTO(produceDraw(participants)));
 
         MockHttpServletResponse response = mvc
@@ -291,7 +291,7 @@ public class DrawControllerTest {
     @Test
     @DisplayName("Should return a HTTP 400 when draw already started")
     void startDrawAlreadyStarted() throws Exception {
-        List<Participant> participants = produceParticipants(new Random().nextInt(3,10));
+        List<Participant> participants = produceParticipants(new Random().nextInt(3, 10));
         Draw draw = drawService.createDraw(new DrawDTO(produceDraw(participants)));
 
         draw.startDraw();
