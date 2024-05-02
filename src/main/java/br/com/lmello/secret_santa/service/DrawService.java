@@ -66,14 +66,16 @@ public class DrawService {
 
         Draw draw = optionalDraw.get();
 
-        List<Participant> participants = data.
-                participants().
-                stream().
-                map(Participant::new)
+        List<Participant> participants = data.participants()
+                .stream()
+                .map(p -> participantRepository
+                        .getParticipantByNameAndEmailC(p.name(), p.email())
+                        .orElseGet(() -> new Participant(p)))
                 .collect(Collectors.toList());
 
-        draw.setParticipants(participants);
+        participantRepository.saveAll(participants);
 
+        draw.setParticipants(participants);
         draw.setBudget(data.budget());
 
         drawRepository.save(draw);
