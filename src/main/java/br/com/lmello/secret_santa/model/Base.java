@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 abstract public class Base {
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    protected LocalDateTime createdAt = LocalDateTime.now();
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime lastModifiedAt;
+    protected LocalDateTime lastModifiedAt;
 }
