@@ -1,10 +1,10 @@
-package br.com.lmello.secret_santa.infra;
+package br.com.lmello.secret_santa.infra.exception.handler;
 
 import br.com.lmello.secret_santa.dto.ErrorMessageDTO;
-import br.com.lmello.secret_santa.exception.ImpossibleDrawException;
-import br.com.lmello.secret_santa.exception.InvalidAdminCodeException;
-import br.com.lmello.secret_santa.exception.NotFoundException;
-import br.com.lmello.secret_santa.exception.SecretSantaAlreadyStartedException;
+import br.com.lmello.secret_santa.infra.exception.ImpossibleDrawException;
+import br.com.lmello.secret_santa.infra.exception.InvalidAdminCodeException;
+import br.com.lmello.secret_santa.infra.exception.NotFoundException;
+import br.com.lmello.secret_santa.infra.exception.SecretSantaAlreadyStartedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

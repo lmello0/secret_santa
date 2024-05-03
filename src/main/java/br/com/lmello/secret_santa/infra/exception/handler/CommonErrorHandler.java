@@ -1,4 +1,4 @@
-package br.com.lmello.secret_santa.infra;
+package br.com.lmello.secret_santa.infra.exception.handler;
 
 import br.com.lmello.secret_santa.dto.ErrorMessageDTO;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

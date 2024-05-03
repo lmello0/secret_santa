@@ -1,4 +1,4 @@
-package br.com.lmello.secret_santa.exception;
+package br.com.lmello.secret_santa.infra.exception;
 
 public class ImpossibleDrawException extends RuntimeException {
     public ImpossibleDrawException(String code, int size) {
