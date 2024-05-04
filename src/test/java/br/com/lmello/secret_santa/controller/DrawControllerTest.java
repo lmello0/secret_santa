@@ -6,10 +6,13 @@ import br.com.lmello.secret_santa.dto.ParticipantDTO;
 import br.com.lmello.secret_santa.dto.StartDrawDTO;
 import br.com.lmello.secret_santa.model.Draw;
 import br.com.lmello.secret_santa.model.Participant;
+import br.com.lmello.secret_santa.model.User;
 import br.com.lmello.secret_santa.repository.DrawRepository;
+import br.com.lmello.secret_santa.repository.UserRepository;
 import br.com.lmello.secret_santa.service.DrawService;
 import br.com.lmello.secret_santa.service.EmailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,9 @@ public class DrawControllerTest {
     @Autowired
     private DrawService drawService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @MockBean
     private EmailService emailService;
 
@@ -61,6 +67,19 @@ public class DrawControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private static String apiKey;
+
+    @BeforeAll
+    static void createApiKey(@Autowired UserRepository userRepository) {
+        User testUser = new User();
+
+        testUser.setKey("super-test-key");
+
+        userRepository.save(testUser);
+
+        apiKey = testUser.getKey();
+    }
+
     @Test
     @DisplayName("Should return HTTP 201 and a draw response")
     void createDrawSuccess() throws Exception {
@@ -70,6 +89,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw")
+                                .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(drawDTOJacksonTester.write(
                                         new DrawDTO(10000, participantDTOS)
@@ -90,7 +110,8 @@ public class DrawControllerTest {
     @DisplayName("Should return HTTP 400 when data is missing")
     void createDrawInvalidBody() throws Exception {
         MockHttpServletResponse response = mvc
-                .perform(post("/draw"))
+                .perform(post("/draw")
+                        .header("X-API-KEY",apiKey))
                 .andReturn()
                 .getResponse();
 
@@ -109,6 +130,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         get("/draw/{code}", draw.getCode())
+                                .header("X-API-KEY",apiKey)
                 ).andReturn()
                 .getResponse();
 
@@ -127,6 +149,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         get("/draw/{code}", draw.getCode())
+                            .header("X-API-KEY",apiKey)
                 ).andReturn()
                 .getResponse();
 
@@ -149,6 +172,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         put("/draw/{code}", oldDraw.getCode())
+                                .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         drawDTOJacksonTester
@@ -180,6 +204,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         put("/draw/{code}", oldDraw.getCode())
+                                .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         drawDTOJacksonTester
@@ -205,6 +230,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         put("/draw/{code}", oldDraw.getCode())
+                                .header("X-API-KEY",apiKey)
                 )
                 .andReturn()
                 .getResponse();
@@ -224,6 +250,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw/{code}", draw.getCode())
+                                .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
                                         .write(new StartDrawDTO(draw.getAdminCode()))
@@ -247,6 +274,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw/{code}", draw.getCode())
+                                .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
                                         .write(new StartDrawDTO(draw.getAdminCode()))
@@ -273,6 +301,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw/{code}", draw.getCode())
+                                .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
                                         .write(new StartDrawDTO(wrongAdminCode))
@@ -300,6 +329,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw/{code}", draw.getCode())
+                                .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
                                         .write(new StartDrawDTO(draw.getAdminCode()))
@@ -326,6 +356,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw/{code}", draw.getCode())
+                                .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
                                         .write(new StartDrawDTO(draw.getAdminCode()))
