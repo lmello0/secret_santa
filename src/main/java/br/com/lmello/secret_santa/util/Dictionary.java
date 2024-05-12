@@ -13,7 +13,7 @@ public class Dictionary {
             "CHARLIE",
             "DELTA",
             "ECHO",
-            "FOXTROX",
+            "FOXTROT",
             "GOLF",
             "HOTEL",
             "INDIA",
