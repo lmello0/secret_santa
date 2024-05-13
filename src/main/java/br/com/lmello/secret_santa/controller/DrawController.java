@@ -65,8 +65,15 @@ public class DrawController {
                         d.getDraw().getBudget()
                 )).toList();
 
-//        emailList.forEach(emailService::sendEmail);
+        emailList.forEach(emailService::sendEmail);
 
-        return ResponseEntity.ok().body("Draw started");
+        return ResponseEntity.ok().body(new StartDrawDTO(null, "Draw started"));
+    }
+
+    @DeleteMapping("{code}")
+    public ResponseEntity<?> deleteDraw(@PathVariable String code) {
+        drawService.deleteDraw(code);
+
+        return ResponseEntity.noContent().build();
     }
 }
