@@ -131,11 +131,13 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         get("/draw/{code}", draw.getCode())
-                                .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                 ).andReturn()
                 .getResponse();
 
         String expectedResponse = drawDTOJacksonTester.write(new DrawDTO(draw)).getJson();
+
+        System.out.println(expectedResponse);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
@@ -265,7 +267,7 @@ public class DrawControllerTest {
                 .andReturn()
                 .getResponse();
 
-        assertThat(response.getContentAsString()).isEqualTo("Draw started");
+        assertThat(response.getContentAsString()).isEqualTo("{\"adminCode\":null,\"message\":\"Draw started\"}");
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
@@ -379,7 +381,7 @@ public class DrawControllerTest {
 
     private Draw produceDraw(List<Participant> participants) {
         String id = UUID.randomUUID().toString();
-        String code = "ABC-123-DEF";
+        String code = UUID.randomUUID().toString();
         String adminCode = "PAPA-MIKE-TANGO";
         BigDecimal budget = BigDecimal.valueOf(100.00);
 

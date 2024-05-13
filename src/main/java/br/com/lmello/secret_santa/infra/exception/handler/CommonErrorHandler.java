@@ -20,14 +20,18 @@ public class CommonErrorHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<?> handleNoResourceFond(NoResourceFoundException exception) {
         String errorMessage = exception.getMessage();
-        String urlPath = errorMessage.substring(
-                errorMessage.lastIndexOf(" ")+1,
-                errorMessage.lastIndexOf("/")+1
-        );
 
-        String message = "URL not found: '"  + urlPath + "'";
+//        String urlPath = "";
+//        try {
+//            urlPath = errorMessage.substring(
+//                    errorMessage.lastIndexOf(" ")+1,
+//                    errorMessage.lastIndexOf("/")+1
+//            );
+//        }
+//
+//        String message = "URL not found: '"  + urlPath + "'";
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessageDTO(message));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessageDTO(errorMessage));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

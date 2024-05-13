@@ -10,9 +10,10 @@
     </parent>
     <groupId>br.com.lmello</groupId>
     <artifactId>secret_santa</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>secret_santa</name>
     <description>secret_santa</description>
+    <packaging>jar</packaging>
     <properties>
         <java.version>17</java.version>
     </properties>

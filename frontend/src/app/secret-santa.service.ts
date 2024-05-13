@@ -2,24 +2,29 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IRaffle } from './raffle/raffle';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SecretSantaService {
-  private readonly API = 'http://localhost:8080/draw';
-  private headers = new HttpHeaders({ 'X-API-KEY': process.env['FRONT_API_KEY'] || '' });
+  private readonly API = '/draw';
+  private headers = new HttpHeaders({ 'X-API-KEY': environment.apiKey });
 
   constructor(private http: HttpClient) { }
 
   getRaffle(raffleCode: String): Observable<IRaffle> {
     const url = `${this.API}/${raffleCode}`;
 
+    console.log(`calling GET: ${url}`);
+
     return this.http.get<IRaffle>(url, { headers: this.headers });
   }
 
   createRaffle(raffle: IRaffle): Observable<IRaffle> {
     const url = `${this.API}`;
+
+    console.log(`calling POST: ${url}`);
 
     return this.http.post<IRaffle>(url, raffle, { headers: this.headers });
   }

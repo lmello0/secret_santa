@@ -1,0 +1,36 @@
+services:
+  database:
+    image: postgres:latest
+    container_name: pg_database
+    environment:
+      POSTGRES_USER: secret_santa
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: secret_santa
+    restart: unless-stopped
+    volumes:
+      - /home/lmello/.secret_santa:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: .
+    container_name: spring-backend
+    restart: unless-stopped
+    environment:
+      PG_URL: database:5432/secret_santa
+      PG_USER: secret_santa
+      PG_PASSWORD: 1234
+      RESEND_API_KEY: re_eykbmNhQ_5acMYyMAU9RHqa3fKRHjxAMj
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+
+  frontend:
+    build: ./frontend/
+    container_name: angular-frontend
+    restart: unless-stopped
+    ports:
+      - 80:80
+    depends_on:
+      - database
+      - backend

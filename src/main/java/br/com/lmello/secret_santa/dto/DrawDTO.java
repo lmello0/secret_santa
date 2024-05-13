@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -25,7 +26,7 @@ public record DrawDTO(
                 draw.getCode(),
                 draw.getAdminCode(),
                 draw.isStarted(),
-                draw.getBudget(),
+                draw.getBudget().setScale(2, RoundingMode.UNNECESSARY),
                 draw.getParticipants()
                         .stream()
                         .map(p -> new ParticipantDTO(p.getName(), p.getEmail()))

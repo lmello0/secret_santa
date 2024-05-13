@@ -42,8 +42,18 @@ public class Draw extends Base {
     private LocalDateTime startedAt;
 
     public Draw(DrawDTO drawDTO, List<Participant> participants) {
-        this.code = drawDTO.code().isEmpty() ? generateCode() : drawDTO.code();
-        this.adminCode = drawDTO.adminCode().isEmpty() ? generateAdminCode() : drawDTO.adminCode();
+        if (drawDTO.code() == null) {
+            this.code = generateCode();
+        } else {
+            this.code = drawDTO.code();
+        }
+
+        if (drawDTO.adminCode() == null) {
+            this.adminCode = generateAdminCode();
+        } else {
+            this.adminCode = drawDTO.adminCode();
+        }
+
         this.budget = drawDTO.budget();
         this.participants = participants;
     }

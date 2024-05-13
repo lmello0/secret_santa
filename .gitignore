@@ -2,6 +2,8 @@ node_modules/
 .env
 dist/
 mongodb/
+frontend/src/environments/*.prod.ts
+**/.angular/
 
 HELP.md
 target/
@@ -39,3 +41,6 @@ build/
 
 ### JUnit ###
 htmlReport/**/*
+
+init.sql
+
