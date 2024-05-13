@@ -85,6 +85,17 @@ public class DrawService {
     }
 
     @Transactional
+    public void deleteDraw(String code) {
+        Optional<Draw> optionalDraw = drawRepository.findByCode(code);
+
+        if (optionalDraw.isEmpty()) {
+            throw new NotFoundException("Draw '" + code + "' not found");
+        }
+
+        drawRepository.delete(optionalDraw.get());
+    }
+
+    @Transactional
     public List<DrawResult> startDraw(String code, String adminCode) {
         Optional<Draw> optionalDraw = drawRepository.findByCode(code);
 
