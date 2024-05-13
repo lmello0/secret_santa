@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -14,7 +15,7 @@ public record DrawDTO(
         boolean started,
         @JsonProperty
         @NotNull
-        int budget,
+        BigDecimal budget,
         @JsonProperty
         @NotNull
         List<ParticipantDTO> participants
@@ -32,7 +33,7 @@ public record DrawDTO(
         );
     }
 
-    public DrawDTO(int budget, List<ParticipantDTO> participants) {
+    public DrawDTO(BigDecimal budget, List<ParticipantDTO> participants) {
         this(
                 null,
                 null,

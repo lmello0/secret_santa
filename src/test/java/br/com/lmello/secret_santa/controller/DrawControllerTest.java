@@ -27,6 +27,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -92,7 +93,7 @@ public class DrawControllerTest {
                                 .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(drawDTOJacksonTester.write(
-                                        new DrawDTO(10000, participantDTOS)
+                                        new DrawDTO(BigDecimal.valueOf(100.00), participantDTOS)
                                 ).getJson())
                 ).andReturn()
                 .getResponse();
@@ -169,6 +170,8 @@ public class DrawControllerTest {
 
         List<ParticipantDTO> newParticipants = parseParticipants(produceParticipants(new Random().nextInt(10, 20)));
 
+        BigDecimal multipliedBudget = oldDraw.getBudget().multiply(BigDecimal.valueOf(MULTIPLY_FACTOR));
+
         MockHttpServletResponse response = mvc
                 .perform(
                         put("/draw/{code}", oldDraw.getCode())
@@ -176,7 +179,7 @@ public class DrawControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         drawDTOJacksonTester
-                                                .write(new DrawDTO(oldDraw.getBudget() * MULTIPLY_FACTOR, newParticipants))
+                                                .write(new DrawDTO(multipliedBudget, newParticipants))
                                                 .getJson()
                                 )
                 )
@@ -188,7 +191,7 @@ public class DrawControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(newDraw.getParticipants().size()).isBetween(10, 20);
         assertThat(newDraw.getParticipants().size()).isGreaterThan(oldDraw.getParticipants().size());
-        assertThat(newDraw.getBudget()).isEqualTo(oldDraw.getBudget() * MULTIPLY_FACTOR);
+        assertThat(newDraw.getBudget()).isEqualTo(multipliedBudget);
     }
 
     @Test
@@ -201,6 +204,8 @@ public class DrawControllerTest {
 
         List<ParticipantDTO> newParticipants = parseParticipants(produceParticipants(new Random().nextInt(10, 20)));
 
+        BigDecimal multipliedValue = oldDraw.getBudget().multiply(BigDecimal.valueOf(MULTIPLY_FACTOR));
+
         MockHttpServletResponse response = mvc
                 .perform(
                         put("/draw/{code}", oldDraw.getCode())
@@ -208,7 +213,7 @@ public class DrawControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         drawDTOJacksonTester
-                                                .write(new DrawDTO(oldDraw.getBudget() * MULTIPLY_FACTOR, newParticipants))
+                                                .write(new DrawDTO(multipliedValue, newParticipants))
                                                 .getJson()
                                 )
                 )
@@ -253,7 +258,7 @@ public class DrawControllerTest {
                                 .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
-                                        .write(new StartDrawDTO(draw.getAdminCode()))
+                                        .write(new StartDrawDTO(draw.getAdminCode(), null))
                                         .getJson()
                                 )
                 )
@@ -277,7 +282,7 @@ public class DrawControllerTest {
                                 .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
-                                        .write(new StartDrawDTO(draw.getAdminCode()))
+                                        .write(new StartDrawDTO(draw.getAdminCode(), null))
                                         .getJson()
                                 )
                 )
@@ -304,7 +309,7 @@ public class DrawControllerTest {
                                 .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
-                                        .write(new StartDrawDTO(wrongAdminCode))
+                                        .write(new StartDrawDTO(wrongAdminCode, null))
                                         .getJson()
                                 )
                 )
@@ -332,7 +337,7 @@ public class DrawControllerTest {
                                 .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
-                                        .write(new StartDrawDTO(draw.getAdminCode()))
+                                        .write(new StartDrawDTO(draw.getAdminCode(), null))
                                         .getJson()
                                 )
                 )
@@ -359,7 +364,7 @@ public class DrawControllerTest {
                                 .header("X-API-KEY",apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
-                                        .write(new StartDrawDTO(draw.getAdminCode()))
+                                        .write(new StartDrawDTO(draw.getAdminCode(),null))
                                         .getJson()
                                 )
                 )
@@ -376,7 +381,7 @@ public class DrawControllerTest {
         String id = UUID.randomUUID().toString();
         String code = "ABC-123-DEF";
         String adminCode = "PAPA-MIKE-TANGO";
-        int budget = 10000;
+        BigDecimal budget = BigDecimal.valueOf(100.00);
 
         Draw draw = new Draw();
 

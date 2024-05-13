@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,7 @@ public class DrawServiceTest {
     @Test
     @DisplayName("Should create a new Draw successfully")
     public void testCreateDrawSuccessful() {
-        int budget = 10000;
+        BigDecimal budget = BigDecimal.valueOf(100.00);
         List<ParticipantDTO> participantsDTOs = parseParticipants(produceParticipants(2));
 
         DrawDTO drawDTO = new DrawDTO(budget, participantsDTOs);
@@ -106,14 +107,14 @@ public class DrawServiceTest {
         Draw draw = produceDraw(participants);
 
         String code = draw.getCode();
-        int budget = draw.getBudget();
+        BigDecimal budget = draw.getBudget();
         List<ParticipantDTO> participantsDTOs = parseParticipants(participants);
 
         when(drawRepository.findByCode(code)).thenReturn(Optional.of(draw));
 
-        Draw updatedDraw = drawService.updateDraw(code, new DrawDTO(budget * 2, participantsDTOs));
+        Draw updatedDraw = drawService.updateDraw(code, new DrawDTO(budget.multiply(BigDecimal.valueOf(2)), participantsDTOs));
 
-        int expectedBudget = budget * 2;
+        BigDecimal expectedBudget = budget.multiply(BigDecimal.valueOf(2));
 
         assertNotNull(updatedDraw);
 
@@ -134,14 +135,14 @@ public class DrawServiceTest {
         Draw draw = produceDraw(participants);
 
         String code = draw.getCode();
-        int budget = draw.getBudget();
+        BigDecimal budget = draw.getBudget();
         List<ParticipantDTO> participantsDTOs = parseParticipants(participants);
 
         when(drawRepository.findByCode(code)).thenReturn(Optional.empty());
 
         NotFoundException ex = assertThrows(
                 NotFoundException.class,
-                () -> drawService.updateDraw(code, new DrawDTO(budget * 2, participantsDTOs))
+                () -> drawService.updateDraw(code, new DrawDTO(budget.multiply(BigDecimal.valueOf(2)), participantsDTOs))
         );
 
         String expectedMessage = "Draw '" + code + "' not found";
@@ -272,7 +273,7 @@ public class DrawServiceTest {
         String id = UUID.randomUUID().toString();
         String code = "ABC-123-DEF";
         String adminCode = "PAPA-MIKE-TANGO";
-        int budget = 10000;
+        BigDecimal budget = BigDecimal.valueOf(100.00);
 
         Draw draw = new Draw();
 

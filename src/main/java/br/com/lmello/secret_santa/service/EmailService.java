@@ -7,6 +7,8 @@ import com.resend.services.emails.model.SendEmailRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class EmailService {
 
@@ -39,7 +41,7 @@ public class EmailService {
         return "Secret santa results - " + drawCode;
     }
 
-    private String createBodyText(String drawCode, String sender, String receiver, int budget) {
+    private String createBodyText(String drawCode, String sender, String receiver, BigDecimal budget) {
         return "Olá, " + sender + "!\n\n" +
                 "Referente ao amigo secreto - " + drawCode + " com limite de R$" + budget + "\n" +
                 "Você deverá enviar um presente para " + receiver;

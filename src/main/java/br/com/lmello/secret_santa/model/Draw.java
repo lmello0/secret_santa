@@ -26,7 +26,7 @@ public class Draw extends Base {
 
     private String adminCode;
 
-    private int budget;
+    private BigDecimal budget;
 
     @ManyToMany
     @JoinTable(
