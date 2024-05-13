@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,8 +42,8 @@ public class Draw extends Base {
     private LocalDateTime startedAt;
 
     public Draw(DrawDTO drawDTO, List<Participant> participants) {
-        this.code = generateCode();
-        this.adminCode = generateAdminCode();
+        this.code = drawDTO.code().isEmpty() ? generateCode() : drawDTO.code();
+        this.adminCode = drawDTO.adminCode().isEmpty() ? generateAdminCode() : drawDTO.adminCode();
         this.budget = drawDTO.budget();
         this.participants = participants;
     }
