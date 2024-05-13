@@ -8,7 +8,7 @@ import { IRaffle } from './raffle/raffle';
 })
 export class SecretSantaService {
   private readonly API = 'http://localhost:8080/draw';
-  private headers = new HttpHeaders({ 'X-API-KEY': 'super-key' });
+  private headers = new HttpHeaders({ 'X-API-KEY': process.env['FRONT_API_KEY'] || '' });
 
   constructor(private http: HttpClient) { }
 
