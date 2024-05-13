@@ -6,42 +6,25 @@
         <form [formGroup]="addForm">
           <ul class="flex flex-direction participant-control">
             <li>
-              <input
-                type="text"
-                placeholder="Nome"
-                formControlName="name"
-                [ngClass]="
+              <input type="text" placeholder="Nome" formControlName="name" [ngClass]="
                   validateForm(
                     this.addForm.get('name')?.errors,
                     this.addForm.get('name')?.touched
                   )
-                "
-              />
+                " />
             </li>
             <li>
-              <input
-                type="text"
-                placeholder="Email"
-                formControlName="email"
-                [ngClass]="
+              <input type="text" placeholder="Email" formControlName="email" [ngClass]="
                   validateForm(
                     this.addForm.get('email')?.errors,
                     this.addForm.get('email')?.touched
                   )
-                "
-              />
+                " />
             </li>
             <li>
-              <button
-                class="btn bg-green"
-                [disabled]="!addForm.valid"
-                (click)="addParticipant()"
-                (mouseenter)="showCopyModal()"
-                (mouseleave)="leaveModal()"
-                (focus)="showCopyModal()"
-                (focusout)="leaveModal()"
-                [ngClass]="allowButtonAddPanel()"
-              >
+              <button class="btn bg-green" [disabled]="!addForm.valid" (click)="addParticipant()"
+                (mouseenter)="showCopyModal()" (mouseleave)="leaveModal()" (focus)="showCopyModal()"
+                (focusout)="leaveModal()" [ngClass]="allowButtonAddPanel()">
                 <i class="fa-solid fa-plus"></i>
               </button>
             </li>
@@ -54,62 +37,34 @@
   <div class="grid-child">
     <div class="container bg-deep-blue box-shadow">
       <div class="flex">
-        <!-- <div
-          class="notation"
-          *ngIf="this.currentUrl == '/raffle/new' && !this.copyBtnClicked"
-        >
-          <h2>Copie esse código, ele só aparecerá dessa vez!</h2>
-        </div> -->
         <form [formGroup]="adminForm">
           <ul class="flex flex-direction">
             <li>
-              <input
-                type="number"
-                min="0.00"
-                step="0.01"
-                placeholder="Valor do presente"
-                formControlName="budget"
-                [value]="this.raffle.budget"
-                [ngClass]="
+              <input type="number" min="0.00" step="0.01" placeholder="Valor do presente" formControlName="budget"
+                [value]="this.raffle.budget" [ngClass]="
                   validateForm(
                     this.adminForm.get('budget')?.errors,
                     this.adminForm.get('budget')?.touched
                   )
-                "
-              />
+                " />
             </li>
             <li>
               <div class="flex admin-code-control">
-                <input #adminCodeInput
-                  class="admin-code-input"
-                  type="text"
-                  placeholder="Código de admin"
-                  formControlName="adminCode"
-                  [ngClass]="
+                <input #adminCodeInput class="admin-code-input" type="text" placeholder="Código de admin"
+                  formControlName="adminCode" [ngClass]="
                     validateForm(
                       this.adminForm.get('adminCode')?.errors,
                       this.adminForm.get('adminCode')?.touched
                     )
-                  "
-                />
-                <button
-                  class="btn bg-green"
-                  title="Copiar link amigo secreto"
-                  (click)="copyAdminCode()"
-                >
+                  " />
+                <button class="btn bg-green" title="Copiar código de admin" (click)="copyAdminCode()">
                   <i class="fa-solid fa-copy"></i>
                 </button>
-                <button
-                  class="btn bg-green"
-                  title="Iniciar amigo secreto"
-                  [disabled]="
+                <button class="btn bg-green" title="Iniciar amigo secreto" [disabled]="
                     this.adminForm.valid && this.raffle.participants.length >= 4
                       ? null
                       : true
-                  "
-                  [ngClass]="allowButtonControlPanel()"
-                  (click)="startSecretSanta()"
-                >
+                  " [ngClass]="allowButtonControlPanel()" (click)="startSecretSanta()">
                   Iniciar
                 </button>
               </div>
@@ -132,31 +87,22 @@
       <div class="flex">
         <ul class="flex flex-direction control-panel">
           <li>
-            <button #copyButton
-              class="btn bg-green copy-btn"
-              (click)="copyRaffleCode()"
-              
+            <button #copyButton class="btn bg-green copy-btn" (click)="copyRaffleCode()"
               [ngClass]="!this.adminForm.get('budget')?.valid && this.currentUrl == '/raffle/new' ? 'btn btn-disabled' : 'btn'"
-              title="Copiar link do amigo secreto"
-            >
+              title="Copiar link do amigo secreto">
               <i class="fa-solid fa-link"></i>
               {{ copyButtonText }}
             </button>
           </li>
           <li>
-            <button
-              class="btn bg-red"
-              (click)="confirmDelete.toggle()"
-              [disabled]="this.currentUrl == '/raffle/new' ? true : null"
-              [ngClass]="
+            <button class="btn bg-red" (click)="confirmDelete.toggle()"
+              [disabled]="this.currentUrl == '/raffle/new' ? true : null" [ngClass]="
                 this.currentUrl == '/raffle/new' ? 'btn btn-disabled' : 'btn'
-              "
-              [title]="
+              " [title]="
                 this.currentUrl == '/raffle/new'
                   ? 'Não é possível deletar um novo amigo secreto'
                   : 'Deletar amigo secreto'
-              "
-            >
+              ">
               <i class="fa-solid fa-trash"></i>
             </button>
           </li>
@@ -170,18 +116,17 @@
   <h1>#Confirmar deleção</h1>
   <p>
     Tem certeza que deseja deletar o amigo secreto
-    <strong>{{ raffle.code }}</strong
-    >? Essa ação é irreversível.
+    <strong>{{ raffle.code }}</strong>? Essa ação é irreversível.
   </p>
 
   <ul class="flex flex-direction">
     <li>
-      <button class="btn bg-green" (click)="deleteRaffle()">
+      <button class="btn bg-red" (click)="deleteRaffle()">
         <i class="fa-solid fa-check"></i> Deletar
       </button>
     </li>
     <li>
-      <button class="btn bg-red" (click)="confirmDelete.toggle()">
+      <button class="btn bg-green" (click)="confirmDelete.toggle()">
         <i class="fa-solid fa-xmark"></i> Cancelar
       </button>
     </li>
@@ -199,10 +144,7 @@
 
   <ul class="panel">
     <li>
-      <button
-        class="btn bg-green"
-        (click)="copyAdminCode(); confirmCopyAdminCode.toggle()"
-      >
+      <button class="btn bg-green" (click)="copyAdminCode(); confirmCopyAdminCode.toggle()">
         <i class="fa-solid fa-copy"></i>
       </button>
     </li>

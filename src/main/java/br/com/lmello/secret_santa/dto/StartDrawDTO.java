@@ -1,6 +1,12 @@
 package br.com.lmello.secret_santa.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
+
 public record StartDrawDTO(
-        String adminCode
+        @JsonProperty
+        @NotNull
+        String adminCode,
+        String message
 ) {
 }

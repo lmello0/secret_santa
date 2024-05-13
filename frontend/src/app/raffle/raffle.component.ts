@@ -14,10 +14,10 @@ export class RaffleComponent implements OnInit, AfterViewInit {
     private service: SecretSantaService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   @Input() raffle: IRaffle = {} as IRaffle;
-  
+
   @ViewChild(ModalComponent) modal!: ModalComponent;
   raffleAlreadyStarted: any;
 
@@ -37,6 +37,10 @@ export class RaffleComponent implements OnInit, AfterViewInit {
 
           this.raffle = data;
 
+          if (this.raffle.budget && typeof this.raffle.budget == 'number') {
+            this.raffle.budget = this.raffle.budget.toFixed(2);
+          }
+
           if (this.raffle.started) {
             this.raffleAlreadyStarted.toggle();
           }
@@ -45,7 +49,7 @@ export class RaffleComponent implements OnInit, AfterViewInit {
             this.raffle.participants[i].id = i + 1;
           }
         }
-      );
+        );
     } else {
       this.raffle = {
         code: this.generateCode(),

@@ -19,7 +19,7 @@ export class ParticipantComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.editForm = this.formBuilder.group({
@@ -63,8 +63,8 @@ export class ParticipantComponent implements OnInit {
       email: this.editForm.get('email')?.value,
     };
 
-    this.edit = !this.edit;
     this.participantChange.emit(this.participant);
+    // this.edit = !this.edit;
   }
 
   allowDeleteClass(): string {

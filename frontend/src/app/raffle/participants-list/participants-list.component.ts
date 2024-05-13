@@ -14,14 +14,14 @@ export class ParticipantsListComponent {
   constructor(private service: SecretSantaService) { }
 
   onDeleteParticipant(event: number) {
-    event = event-1;
+    event = event - 1;
 
-    this.service.deleteParticipant(this.raffle.code, event)
+    this.service.saveRaffle(this.raffle)
       .subscribe(() => {
         this.raffle.participants.splice(event, 1);
-        
-        for(let i = 0; i < this.raffle.participants.length; i++) {
-          this.raffle.participants[i].id = i+1;
+
+        for (let i = 0; i < this.raffle.participants.length; i++) {
+          this.raffle.participants[i].id = i + 1;
         }
       });
   }
@@ -29,10 +29,10 @@ export class ParticipantsListComponent {
   onParticipantChange(participant: IParticipant) {
     participant.id = participant.id! - 1;
 
-    this.service.updateParticipant(this.raffle.code, participant).subscribe();
-    
     this.raffle.participants[participant.id!] = participant;
     this.raffle.participants[participant.id!].id = participant.id! + 1;
+
+    this.service.saveRaffle(this.raffle).subscribe();
   }
 
   canDeleteParticipant(): boolean {

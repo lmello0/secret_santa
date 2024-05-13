@@ -16,7 +16,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private service: SecretSantaService
-  ) {}
+  ) { }
 
   addForm!: FormGroup;
   adminForm!: FormGroup;
@@ -24,14 +24,14 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
   @Input() raffle: IRaffle = {} as IRaffle;
   copyBtnClicked: Boolean = false;
-  
+
   currentUrl: string = this.router.url;
-  
+
   @ViewChildren(ModalComponent) modalsRef!: QueryList<ModalComponent>;
   @ViewChild('adminCodeInput') adminCodeInputRef!: ElementRef;
   @ViewChild('copyCodeNotification') copyCoadToastRef!: ElementRef;
   @ViewChild('invalidBudgetNotification') invalidBudgetNotificationRef!: ElementRef;
-  
+
   invalidBudgetToast: any;
   copyCodeToast: any;
   adminCodeInput: any;
@@ -87,7 +87,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
     this.copyCodeToast.toggle();
     setTimeout(() => {
-      if (this.copyCodeToast.show){
+      if (this.copyCodeToast.show) {
         this.copyCodeToast.toggle();
       }
     }, 10000);
@@ -106,7 +106,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    
+
     if (this.currentUrl == '/raffle/new') {
       this.raffle.budget = this.adminForm.get('budget')?.value;
       this.service.createRaffle(this.raffle).subscribe();
@@ -131,13 +131,13 @@ export class MenuComponent implements OnInit, AfterViewInit {
       }, 10000);
       return;
     }
-    
+
     const participant: IParticipant = {
       id: this.raffle.participants.length + 1,
       name: this.addForm.get('name')?.value,
       email: this.addForm.get('email')?.value
     }
-    
+
     if (this.currentUrl == '/raffle/new') {
       this.raffle.budget = this.adminForm.get('budget')?.value;
       this.raffle.participants.push(participant);
@@ -147,8 +147,8 @@ export class MenuComponent implements OnInit, AfterViewInit {
           this.router.navigate([`/raffle/existent/${this.raffle.code}`]);
         });
     } else {
-      this.service.addParticipant(this.raffle.code, participant).subscribe();
       this.raffle.participants.push(participant)
+      this.service.saveRaffle(this.raffle).subscribe();
     }
 
     this.addForm.reset();
@@ -158,7 +158,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     if (this.currentUrl == '/raffle/new') {
       this.router.navigate(['/home']);
     } else {
-      this.service.deleteRaffle(this.raffle.code).subscribe(() => {
+      this.service.deleteRaffle(this.raffle).subscribe(() => {
         this.router.navigate(['/home']);
       });
     }
@@ -166,22 +166,24 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
   startSecretSanta() {
     const adminCode = this.adminForm.get('adminCode')?.value;
+
     this.adminCodeInput.classList.toggle('invalid-form', adminCode != this.raffle.adminCode);
 
-    if (this.raffle.adminCode == adminCode) {
-      this.service.startRaffle(this.raffle.code).subscribe(() => {
-        window.location.reload();
-      });
+    if (this.raffle.adminCode === adminCode) {
+      this.service.startRaffle(this.raffle)
+        .subscribe(() => {
+          window.location.reload();
+        });
     }
   }
 
   showCopyModal() {
-    if (!this.copyBtnClicked )
-    if (!this.copyBtnClicked && (this.addForm.valid && (this.raffle.participants.length == 0 && this.addForm.valid))) {
-      this.showModal = setTimeout(() => {
-        this.confirmCopyAdminCodeModal.toggle();
-      }, 300);
-    }
+    if (!this.copyBtnClicked)
+      if (!this.copyBtnClicked && (this.addForm.valid && (this.raffle.participants.length == 0 && this.addForm.valid))) {
+        this.showModal = setTimeout(() => {
+          this.confirmCopyAdminCodeModal.toggle();
+        }, 300);
+      }
   }
 
   leaveModal() {

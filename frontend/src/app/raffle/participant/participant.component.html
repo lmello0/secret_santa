@@ -37,7 +37,7 @@
     </div>
 
     <div class="button-holder">
-      <button [ngClass]="allowEditButton()" [disabled]="!editForm.valid" (click)="confirmChanges(); edit.toggle()">Confirmar</button>
+      <button [ngClass]="allowEditButton()" [disabled]="!editForm.valid" (click)="confirmChanges()">Confirmar</button>
       <button class="card-button card-del-button" (click)="edit.toggle()">Cancelar</button>
     </div>
   </form>

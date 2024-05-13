@@ -1,62 +1,44 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IRaffle } from './raffle/raffle';
-import { IParticipant } from './raffle/participant';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SecretSantaService {
-  private readonly API = 'http://localhost:3000';
+  private readonly API = 'http://localhost:8080/draw';
+  private headers = new HttpHeaders({ 'X-API-KEY': 'super-key' });
 
   constructor(private http: HttpClient) { }
 
   getRaffle(raffleCode: String): Observable<IRaffle> {
-    const url = `${this.API}/getRaffle/${raffleCode}`;
+    const url = `${this.API}/${raffleCode}`;
 
-    return this.http.get<IRaffle>(url);
+    return this.http.get<IRaffle>(url, { headers: this.headers });
   }
 
   createRaffle(raffle: IRaffle): Observable<IRaffle> {
-    const url = `${this.API}/createRaffle/${raffle.code}`;
+    const url = `${this.API}`;
 
-    return this.http.post<IRaffle>(url, raffle);
+    return this.http.post<IRaffle>(url, raffle, { headers: this.headers });
   }
 
   saveRaffle(raffle: IRaffle): Observable<IRaffle> {
-    const url = `${this.API}/updateRaffle`;
+    const url = `${this.API}/${raffle.code}`;
 
-    return this.http.put<IRaffle>(url, raffle);
+    return this.http.put<IRaffle>(url, raffle, { headers: this.headers });
   }
 
-  deleteRaffle(code: String): Observable<IRaffle> {
-    const url = `${this.API}/deleteRaffle/${code}`;
+  deleteRaffle(raffle: IRaffle): Observable<IRaffle> {
+    const url = `${this.API}/${raffle.code}`;
 
-    return this.http.delete<IRaffle>(url);
+    return this.http.delete<IRaffle>(url, { headers: this.headers });
   }
 
-  addParticipant(code: String, participant: IParticipant): Observable<IParticipant> {
-    const url = `${this.API}/updateRaffle/${code}/participant/add`;
+  startRaffle(raffle: IRaffle): Observable<IRaffle> {
+    const url = `${this.API}/${raffle.code}`
 
-    return this.http.put<IParticipant>(url, participant);
-  }
-
-  deleteParticipant(code: String, id: number): Observable<IParticipant> {
-    const url = `${this.API}/updateRaffle/${code}/participant/remove/${id}`;
-
-    return this.http.delete<IParticipant>(url);
-  }
-
-  updateParticipant(code: String, participant: IParticipant): Observable<IParticipant> {
-    const url = `${this.API}/updateRaffle/${code}/participant/edit/${participant.id!}`;
-
-    return this.http.put<IParticipant>(url, participant);
-  }
-
-  startRaffle(code: String): Observable<IRaffle> {
-    const url = `${this.API}/startRaffle/${code}/`
-
-    return this.http.get<IRaffle>(url);
+    return this.http.post<IRaffle>(url, raffle, { headers: this.headers });
   }
 }
