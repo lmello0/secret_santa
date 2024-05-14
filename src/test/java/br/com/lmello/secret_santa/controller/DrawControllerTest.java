@@ -90,7 +90,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw")
-                                .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(drawDTOJacksonTester.write(
                                         new DrawDTO(BigDecimal.valueOf(100.00), participantDTOS)
@@ -112,7 +112,7 @@ public class DrawControllerTest {
     void createDrawInvalidBody() throws Exception {
         MockHttpServletResponse response = mvc
                 .perform(post("/draw")
-                        .header("X-API-KEY",apiKey))
+                        .header("X-API-KEY", apiKey))
                 .andReturn()
                 .getResponse();
 
@@ -152,7 +152,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         get("/draw/{code}", draw.getCode())
-                            .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                 ).andReturn()
                 .getResponse();
 
@@ -177,7 +177,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         put("/draw/{code}", oldDraw.getCode())
-                                .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         drawDTOJacksonTester
@@ -211,7 +211,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         put("/draw/{code}", oldDraw.getCode())
-                                .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         drawDTOJacksonTester
@@ -237,7 +237,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         put("/draw/{code}", oldDraw.getCode())
-                                .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                 )
                 .andReturn()
                 .getResponse();
@@ -257,7 +257,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw/{code}", draw.getCode())
-                                .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
                                         .write(new StartDrawDTO(draw.getAdminCode(), null))
@@ -277,11 +277,10 @@ public class DrawControllerTest {
         List<Participant> participants = produceParticipants(new Random().nextInt(10));
         Draw draw = produceDraw(participants);
 
-
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw/{code}", draw.getCode())
-                                .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
                                         .write(new StartDrawDTO(draw.getAdminCode(), null))
@@ -308,7 +307,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw/{code}", draw.getCode())
-                                .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
                                         .write(new StartDrawDTO(wrongAdminCode, null))
@@ -336,7 +335,7 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw/{code}", draw.getCode())
-                                .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
                                         .write(new StartDrawDTO(draw.getAdminCode(), null))
@@ -363,10 +362,10 @@ public class DrawControllerTest {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/draw/{code}", draw.getCode())
-                                .header("X-API-KEY",apiKey)
+                                .header("X-API-KEY", apiKey)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(startDrawDTOJacksonTester
-                                        .write(new StartDrawDTO(draw.getAdminCode(),null))
+                                        .write(new StartDrawDTO(draw.getAdminCode(), null))
                                         .getJson()
                                 )
                 )
@@ -376,6 +375,44 @@ public class DrawControllerTest {
         String expectedResponse = errorMessageDTOJacksonTester.write(new ErrorMessageDTO("Secret santa '" + draw.getCode() + "' is impossible due to its size: " + draw.getParticipants().size())).getJson();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @DisplayName("Should return a HTTP 204 when draw is deleted")
+    void deleteDrawSuccess() throws Exception {
+        List<Participant> participants = produceParticipants(new Random().nextInt(10));
+        Draw draw = drawService.createDraw(new DrawDTO(produceDraw(participants)));
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        delete("/draw/{code}", draw.getCode())
+                                .header("X-API-KEY", apiKey)
+                )
+                .andReturn()
+                .getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(response.getContentAsString()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Should return a HTTP 200 when draw is not found")
+    void deleteDrawNotFound() throws Exception {
+        List<Participant> participants = produceParticipants(new Random().nextInt(10));
+        Draw draw = produceDraw(participants);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        delete("/draw/{code}", draw.getCode())
+                                .header("X-API-KEY", apiKey)
+                )
+                .andReturn()
+                .getResponse();
+
+        String expectedResponse = errorMessageDTOJacksonTester.write(new ErrorMessageDTO("Draw '" + draw.getCode() + "' not found")).getJson();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
     }
 

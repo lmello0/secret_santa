@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
@@ -266,6 +266,42 @@ public class DrawServiceTest {
         );
 
         String expectedMessage = "Secret santa '" + code + "' is impossible due to its size: " + totalParticipants;
+        String actualMessage = ex.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    @DisplayName("Should delete a draw successfully")
+    public void testDeleteDrawSuccessful() {
+        List<Participant> participants = produceParticipants(2);
+        Draw draw = produceDraw(participants);
+
+        String code = draw.getCode();
+
+        when(drawRepository.findByCode(code)).thenReturn(Optional.of(draw));
+
+        drawService.deleteDraw(code);
+
+        verify(drawRepository, times(1)).delete(draw);
+    }
+
+    @Test
+    @DisplayName("Should throw a NotFoundException")
+    public void testDeleteDrawNotFoundException() {
+        List<Participant> participants = produceParticipants(2);
+        Draw draw = produceDraw(participants);
+
+        String code = draw.getCode();
+
+        when(drawRepository.findByCode(code)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(
+                NotFoundException.class,
+                () -> drawService.deleteDraw(code)
+        );
+
+        String expectedMessage = "Draw '" + code + "' not found";
         String actualMessage = ex.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
