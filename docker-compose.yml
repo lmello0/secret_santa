@@ -10,6 +10,11 @@ services:
     volumes:
       - /home/lmello/.secret_santa:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    deploy:
+      resources:
+        limits:
+          cpus: '0.33'
+          memory: 166M
 
   backend:
     build: .
@@ -24,6 +29,11 @@ services:
       - 8080:8080
     depends_on:
       - database
+    deploy:
+      resources:
+        limits:
+          cpus: '0.33'
+          memory: 166M
 
   frontend:
     build: ./frontend/
@@ -34,3 +44,8 @@ services:
     depends_on:
       - database
       - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.33'
+          memory: 166M
