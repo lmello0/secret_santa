@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class SecretSantaService {
-  private readonly API = '/draw';
+  private readonly API = environment.backendUrl + '/draw';
   private headers = new HttpHeaders({ 'X-API-KEY': environment.apiKey });
 
   constructor(private http: HttpClient) { }
