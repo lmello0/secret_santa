@@ -16,15 +16,11 @@ export class SecretSantaService {
   getRaffle(raffleCode: String): Observable<IRaffle> {
     const url = `${this.API}/${raffleCode}`;
 
-    console.log(`calling GET: ${url}`);
-
     return this.http.get<IRaffle>(url, { headers: this.headers });
   }
 
   createRaffle(raffle: IRaffle): Observable<IRaffle> {
     const url = `${this.API}`;
-
-    console.log(`calling POST: ${url}`);
 
     return this.http.post<IRaffle>(url, raffle, { headers: this.headers });
   }

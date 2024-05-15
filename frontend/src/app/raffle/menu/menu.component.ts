@@ -143,9 +143,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
       this.raffle.participants.push(participant);
 
       this.service.createRaffle(this.raffle)
-        .subscribe((d) => {
-          console.log(d);
-
+        .subscribe(() => {
           this.router.navigate([`/raffle/existent/${this.raffle.code}`]);
         });
     } else {
