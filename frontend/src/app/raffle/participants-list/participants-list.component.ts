@@ -16,14 +16,12 @@ export class ParticipantsListComponent {
   onDeleteParticipant(event: number) {
     event = event - 1;
 
-    this.service.saveRaffle(this.raffle)
-      .subscribe(() => {
-        this.raffle.participants.splice(event, 1);
+    this.raffle.participants.splice(event, 1);
+    for (let i = 0; i < this.raffle.participants.length; i++) {
+      this.raffle.participants[i].id = i + 1;
+    }
 
-        for (let i = 0; i < this.raffle.participants.length; i++) {
-          this.raffle.participants[i].id = i + 1;
-        }
-      });
+    this.service.saveRaffle(this.raffle).subscribe();
   }
 
   onParticipantChange(participant: IParticipant) {
