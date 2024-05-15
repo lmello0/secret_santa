@@ -30,26 +30,26 @@ export class RaffleComponent implements OnInit, AfterViewInit {
 
     if (code != null) {
       this.service.getRaffle(code!)
-        .subscribe((data) => {
-          if (!data) {
+        .subscribe({
+          next: (data) => {
+            this.raffle = data;
+
+            if (this.raffle.budget && typeof this.raffle.budget == 'number') {
+              this.raffle.budget = this.raffle.budget.toFixed(2);
+            }
+
+            if (this.raffle.started) {
+              this.raffleAlreadyStarted.toggle();
+            }
+
+            for (let i = 0; i < this.raffle.participants.length; i++) {
+              this.raffle.participants[i].id = i + 1;
+            }
+          },
+          error: () => {
             this.router.navigate(['/raffle/new']);
           }
-
-          this.raffle = data;
-
-          if (this.raffle.budget && typeof this.raffle.budget == 'number') {
-            this.raffle.budget = this.raffle.budget.toFixed(2);
-          }
-
-          if (this.raffle.started) {
-            this.raffleAlreadyStarted.toggle();
-          }
-
-          for (let i = 0; i < this.raffle.participants.length; i++) {
-            this.raffle.participants[i].id = i + 1;
-          }
-        }
-        );
+        });
     } else {
       this.raffle = {
         code: this.generateCode(),
