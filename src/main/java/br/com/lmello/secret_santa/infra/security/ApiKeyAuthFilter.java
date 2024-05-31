@@ -18,6 +18,9 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println(request.getRemoteUser());
+        System.out.println(request.getRemoteHost());
+
         extractor.extract(request)
                 .ifPresent(SecurityContextHolder.getContext()::setAuthentication);
 
