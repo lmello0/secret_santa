@@ -8,8 +8,8 @@ RUN mvn clean package
 
 FROM openjdk:17-alpine as RUN
 
-COPY --from=build /app/target/secret_santa-1.0.jar .
+COPY --from=build /app/target/secret_santa*.jar ./app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT [ "java", "-jar", "secret_santa-1.0.jar" ]
+ENTRYPOINT [ "java", "-jar", "app.jar" ]

@@ -1,34 +1,13 @@
 services:
-  database:
-    image: postgres:latest
-    container_name: pg_database
-    environment:
-      POSTGRES_USER: secret_santa
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: secret_santa
-    restart: unless-stopped
-    volumes:
-      - /home/lmello/.secret_santa:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    deploy:
-      resources:
-        limits:
-          cpus: '0.33'
-          memory: 166M
-
   backend:
     build: .
-    container_name: spring-backend
+    container_name: secret-santa-backend
     restart: unless-stopped
-    environment:
-      PG_URL: database:5432/secret_santa
-      PG_USER: secret_santa
-      PG_PASSWORD: 1234
-      RESEND_API_KEY: re_eykbmNhQ_5acMYyMAU9RHqa3fKRHjxAMj
-    ports:
-      - 8080:8080
-    depends_on:
-      - database
+    networks:
+      - postgres
+      - secret_santa
+    env_file:
+      - .env
     deploy:
       resources:
         limits:
@@ -37,15 +16,22 @@ services:
 
   frontend:
     build: ./frontend/
-    container_name: angular-frontend
+    container_name: secret-santa-frontend
     restart: unless-stopped
     ports:
       - 80:80
     depends_on:
-      - database
       - backend
+    networks:
+      - secret_santa
     deploy:
       resources:
         limits:
           cpus: '0.33'
           memory: 166M
+
+networks:
+  postgres:
+      name: postgres
+      external: true
+  secret_santa:
