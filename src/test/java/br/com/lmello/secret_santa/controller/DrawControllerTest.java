@@ -137,8 +137,6 @@ public class DrawControllerTest {
 
         String expectedResponse = drawDTOJacksonTester.write(new DrawDTO(draw)).getJson();
 
-        System.out.println(expectedResponse);
-
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
     }
